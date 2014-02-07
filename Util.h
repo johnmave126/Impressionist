@@ -1,19 +1,19 @@
 //
-// baseMath.h
+// Util.h
 //
-// header file for basic math operations
+// header file for utilities
 //
 //
 
-#ifndef BASEMATH_H
-#define BASEMATH_H
+#ifndef UTIL_H
+#define UTIL_H
 
 #include <vector>
 #include <functional>
 #include <math.h>
 #include <assert.h>
 
-namespace JohnMath {
+namespace util {
 	/*
 	 * A base class for vector of any length
 	 */
