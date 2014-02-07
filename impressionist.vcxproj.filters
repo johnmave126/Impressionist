@@ -65,7 +65,7 @@
     <ClInclude Include="PointBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="baseMath.h">
+    <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
