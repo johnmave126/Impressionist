@@ -91,10 +91,12 @@ void PaintView::draw()
 		RestoreContent();
 
 	}
-
+	
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
 	{
-
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 		// Clear it after processing.
 		isAnEvent	= 0;	
 
@@ -130,6 +132,8 @@ void PaintView::draw()
 			printf("Unknown event!!\n");		
 			break;
 		}
+
+		glDisable(GL_BLEND);
 	}
 
 	glFlush();

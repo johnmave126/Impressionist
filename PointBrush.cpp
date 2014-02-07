@@ -39,7 +39,7 @@ void PointBrush::BrushMove( const Point source, const Point target )
 		printf( "PointBrush::BrushMove  document is NULL\n" );
 		return;
 	}
-
+	
 	glBegin( GL_POINTS );
 		SetColor( source );
 

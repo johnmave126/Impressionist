@@ -238,7 +238,7 @@ void ImpressionistUI::cb_exit(Fl_Menu_* o, void* v)
 //-----------------------------------------------------------
 void ImpressionistUI::cb_about(Fl_Menu_* o, void* v) 
 {
-	fl_message("Impressionist FLTK version for CS341, Spring 2002");
+	fl_message("Impressionist FLTK version for COMP 4411, Spring 2014");
 }
 
 //------- UI should keep track of the current for all the controls for answering the query from Doc ---------
@@ -278,6 +278,17 @@ void ImpressionistUI::cb_clear_canvas_button(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+
+//-----------------------------------------------------------
+// Updates the brush alpha to use from the value of the alpha
+// slider
+// Called by the UI when the alpha slider is moved
+//-----------------------------------------------------------
+void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_lfAlpha=double( ((Fl_Slider *)o)->value() ) ;
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -335,8 +346,27 @@ void ImpressionistUI::setSize( int size )
 {
 	m_nSize=size;
 
-	if (size<=40) 
+	if (size<=40 && size > 0) 
 		m_BrushSizeSlider->value(m_nSize);
+}
+
+//------------------------------------------------
+// Return the brush alpha
+//------------------------------------------------
+double ImpressionistUI::getAlpha()
+{
+	return m_lfAlpha;
+}
+
+//-------------------------------------------------
+// Set the brush alpha
+//-------------------------------------------------
+void ImpressionistUI::setAlpha( double alpha )
+{
+	m_lfAlpha=alpha;
+
+	if (alpha<=1.00 && alpha >= 0.00) 
+		m_BrushAlphaSlider->value(m_lfAlpha);
 }
 
 // Main menu definition
@@ -402,6 +432,7 @@ ImpressionistUI::ImpressionistUI() {
 	// init values
 
 	m_nSize = 10;
+	m_lfAlpha = 1.0;
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -428,6 +459,19 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_nSize);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
+
+		// Add brush alpha slider to the dialog 
+		m_BrushSizeSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
+		m_BrushSizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_BrushSizeSlider->type(FL_HOR_NICE_SLIDER);
+        m_BrushSizeSlider->labelfont(FL_COURIER);
+        m_BrushSizeSlider->labelsize(12);
+		m_BrushSizeSlider->minimum(0.0);
+		m_BrushSizeSlider->maximum(1.0);
+		m_BrushSizeSlider->step(0.01);
+		m_BrushSizeSlider->value(m_lfAlpha);
+		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
+		m_BrushSizeSlider->callback(cb_alphaSlides);
 
     m_brushDialog->end();	
 
