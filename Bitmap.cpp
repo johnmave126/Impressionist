@@ -27,11 +27,14 @@ unsigned char* readBMP(char*	fname,
 		return NULL; 
 	 
 //	I am doing fread( &bmfh, sizeof(BMP_BITMAPFILEHEADER), 1, file ) in a safe way. :}
+	fread( &bmfh, sizeof(BMP_BITMAPFILEHEADER), 1, file );
+	/*
 	fread( &(bmfh.bfType), 2, 1, file); 
 	fread( &(bmfh.bfSize), 4, 1, file); 
 	fread( &(bmfh.bfReserved1), 2, 1, file); 
 	fread( &(bmfh.bfReserved2), 2, 1, file); 
 	fread( &(bmfh.bfOffBits), 4, 1, file); 
+	*/
 
 	pos = bmfh.bfOffBits; 
  
@@ -116,8 +119,7 @@ void writeBMP(char*				iname,
 	bmfh.bfSize = sizeof(BMP_BITMAPFILEHEADER) + sizeof(BMP_BITMAPINFOHEADER) + bytes;
 	bmfh.bfReserved1 = 0;
 	bmfh.bfReserved2 = 0;
-	bmfh.bfOffBits = /*hack sizeof(BMP_BITMAPFILEHEADER)=14, sizeof doesn't work?*/ 
-					 14 + sizeof(BMP_BITMAPINFOHEADER);
+	bmfh.bfOffBits = sizeof(BMP_BITMAPFILEHEADER) + sizeof(BMP_BITMAPINFOHEADER);
 
 	bmih.biSize = sizeof(BMP_BITMAPINFOHEADER);
 	bmih.biWidth = width;
@@ -133,12 +135,14 @@ void writeBMP(char*				iname,
 
 	FILE *outFile=fopen(iname, "wb"); 
 
-	//	fwrite(&bmfh, sizeof(BMP_BITMAPFILEHEADER), 1, outFile);
+	fwrite(&bmfh, sizeof(BMP_BITMAPFILEHEADER), 1, outFile);
+	/*
 	fwrite( &(bmfh.bfType), 2, 1, outFile); 
 	fwrite( &(bmfh.bfSize), 4, 1, outFile); 
 	fwrite( &(bmfh.bfReserved1), 2, 1, outFile); 
 	fwrite( &(bmfh.bfReserved2), 2, 1, outFile); 
 	fwrite( &(bmfh.bfOffBits), 4, 1, outFile); 
+	*/
 
 	fwrite(&bmih, sizeof(BMP_BITMAPINFOHEADER), 1, outFile); 
 
