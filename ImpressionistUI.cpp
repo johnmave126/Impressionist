@@ -253,6 +253,13 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	ImpressionistDoc* pDoc=pUI->getDocument();
 
 	int type=(int)v;
+	if(type == BRUSH_LINES || type == BRUSH_SCATTERED_LINES) {
+		pUI->m_LineAngleSlider->activate();
+		pUI->m_LineWidthSlider->activate();
+	} else {
+		pUI->m_LineAngleSlider->deactivate();
+		pUI->m_LineWidthSlider->deactivate();
+	}
 
 
 	pDoc->setBrushType(type);
@@ -280,7 +287,16 @@ void ImpressionistUI::cb_sizeSlides(Fl_Widget* o, void* v)
 	((ImpressionistUI*)(o->user_data()))->m_nSize=int( ((Fl_Slider *)o)->value() ) ;
 }
 
+void ImpressionistUI::cb_lineWidthSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nLineWidth=int( ((Fl_Slider *)o)->value() ) ;
+}
+	
 
+void ImpressionistUI::cb_lineAngleSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nLineAngle=int( ((Fl_Slider *)o)->value() ) ;
+}
 //-----------------------------------------------------------
 // Updates the brush alpha to use from the value of the alpha
 // slider
@@ -348,6 +364,44 @@ void ImpressionistUI::setSize( int size )
 
 	if (size<=40 && size > 0) 
 		m_BrushSizeSlider->value(m_nSize);
+}
+
+//------------------------------------------------
+// Return the line width
+//------------------------------------------------
+int ImpressionistUI::getLineWidth()
+{
+	return m_nLineWidth;
+}
+
+//-------------------------------------------------
+// Set the line width
+//-------------------------------------------------
+void ImpressionistUI::setLineWidth( int size )
+{
+	m_nLineWidth=size;
+
+	if (size<=40 && size > 0) 
+		m_LineWidthSlider->value(m_nSize);
+}
+
+//------------------------------------------------
+// Return the line angle
+//------------------------------------------------
+int ImpressionistUI::getLineAngle()
+{
+	return m_nLineAngle;
+}
+
+//-------------------------------------------------
+// Set the line Angle
+//-------------------------------------------------
+void ImpressionistUI::setLineAngle( int size )
+{
+	m_nLineAngle=size;
+
+	if (size<=359 && size >= 0) 
+		m_LineAngleSlider->value(m_nSize);
 }
 
 //------------------------------------------------
@@ -433,6 +487,9 @@ ImpressionistUI::ImpressionistUI() {
 
 	m_nSize = 10;
 	m_lfAlpha = 1.0;
+	m_nLineAngle = 0;
+	m_nLineWidth = 1;
+
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
@@ -460,8 +517,37 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_sizeSlides);
 
+		// Add line width slider to the dialog 
+		m_LineWidthSlider = new Fl_Value_Slider(10, 120, 300, 20, "Line Width");
+		m_LineWidthSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_LineWidthSlider->type(FL_HOR_NICE_SLIDER);
+        m_LineWidthSlider->labelfont(FL_COURIER);
+        m_LineWidthSlider->labelsize(12);
+		m_LineWidthSlider->minimum(1);
+		m_LineWidthSlider->maximum(40);
+		m_LineWidthSlider->step(1);
+		m_LineWidthSlider->value(m_nLineWidth);
+		m_LineWidthSlider->align(FL_ALIGN_RIGHT);
+		m_LineWidthSlider->callback(cb_lineWidthSlides);
+		m_LineWidthSlider->deactivate();
+		
+
+		// Add line angle slider to the dialog 
+		m_LineAngleSlider = new Fl_Value_Slider(10, 160, 300, 20, "Line Angle");
+		m_LineAngleSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_LineAngleSlider->type(FL_HOR_NICE_SLIDER);
+        m_LineAngleSlider->labelfont(FL_COURIER);
+        m_LineAngleSlider->labelsize(12);
+		m_LineAngleSlider->minimum(0);
+		m_LineAngleSlider->maximum(359);
+		m_LineAngleSlider->step(1);
+		m_LineAngleSlider->value(m_nLineAngle);
+		m_LineAngleSlider->align(FL_ALIGN_RIGHT);
+		m_LineAngleSlider->callback(cb_lineAngleSlides);
+		m_LineAngleSlider->deactivate();
+
 		// Add brush alpha slider to the dialog 
-		m_BrushSizeSlider = new Fl_Value_Slider(10, 170, 300, 20, "Alpha");
+		m_BrushSizeSlider = new Fl_Value_Slider(10, 200, 300, 20, "Alpha");
 		m_BrushSizeSlider->user_data((void*)(this));	// record self to be used by static callback functions
 		m_BrushSizeSlider->type(FL_HOR_NICE_SLIDER);
         m_BrushSizeSlider->labelfont(FL_COURIER);
