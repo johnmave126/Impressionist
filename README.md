@@ -10,4 +10,7 @@ we are artists
 - [x] lines brush
 - [x] circle brush
 - [ ] scattered points brush
-- [ ] scattered lines
+- [x] scattered lines brush
+- [ ] control direction by right mouse
+- [ ] control direction by cursor
+- [ ] control direction by gradient
