@@ -9,4 +9,5 @@ we are artists
 - [x] line angle slider
 - [ ] lines brush
 - [x] circle brush
-- [ ] scattered points brush
+- [x] scattered points brush
+- [ ] scattered circle brush
