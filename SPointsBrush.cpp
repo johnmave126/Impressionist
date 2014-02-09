@@ -1,5 +1,5 @@
 //
-// ScatteredPointsBrush.cpp
+// SPointsBrush.cpp
 //
 // The implementation of Scattered Points Brush. It is a kind of ImpBrush.
 //
@@ -7,18 +7,18 @@
 #include "Impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
-#include "ScatteredPointsBrush.h"
+#include "SPointsBrush.h"
 #include <math.h>
 
 extern float frand();
 extern int irand(int max);
 
-ScatteredPointsBrush::ScatteredPointsBrush( ImpressionistDoc* pDoc, char* name ) :
+SPointsBrush::SPointsBrush( ImpressionistDoc* pDoc, char* name ) :
 	ImpBrush(pDoc,name)
 {
 }
 
-void ScatteredPointsBrush::BrushBegin( const Point source, const Point target )
+void SPointsBrush::BrushBegin( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
@@ -28,14 +28,14 @@ void ScatteredPointsBrush::BrushBegin( const Point source, const Point target )
 	BrushMove( source, target );
 }
 
-void ScatteredPointsBrush::BrushMove( const Point source, const Point target )
+void SPointsBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 	int x, y, i, j, size = pDoc->getSize();
 
 	if ( pDoc == NULL ) {
-		printf( "ScatteredPointsBrush::BrushMove  document is NULL\n" );
+		printf( "SPointsBrush::BrushMove  document is NULL\n" );
 		return;
 	}
 	
@@ -54,7 +54,7 @@ void ScatteredPointsBrush::BrushMove( const Point source, const Point target )
 	glEnd();
 }
 
-void ScatteredPointsBrush::BrushEnd( const Point source, const Point target )
+void SPointsBrush::BrushEnd( const Point source, const Point target )
 {
 	// do nothing so far
 }

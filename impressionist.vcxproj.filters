@@ -45,10 +45,10 @@
     <ClCompile Include="CircleBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScatteredPointsBrush.cpp">
+    <ClCompile Include="SLineBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SLineBrush.cpp">
+    <ClCompile Include="SPointsBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,10 +86,10 @@
     <ClInclude Include="CircleBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScatteredPointsBrush.h">
+    <ClInclude Include="SLineBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SLineBrush.h">
+    <ClInclude Include="SPointsBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

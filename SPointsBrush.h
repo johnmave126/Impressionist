@@ -1,18 +1,18 @@
 //
-// ScatteredPointsBrush.h
+// SPointsBrush.h
 //
 // The header file for Scattered Points Brush. 
 //
 
-#ifndef SCATTEREDPOINTSBRUSH_H
-#define SCATTEREDPOINTSBRUSH_H
+#ifndef SPOINTSBRUSH_H
+#define SPOINTSBRUSH_H
 
 #include "ImpBrush.h"
 
-class ScatteredPointsBrush : public ImpBrush
+class SPointsBrush : public ImpBrush
 {
 public:
-	ScatteredPointsBrush( ImpressionistDoc* pDoc = NULL, char* name = NULL );
+	SPointsBrush( ImpressionistDoc* pDoc = NULL, char* name = NULL );
 
 	void BrushBegin( const Point source, const Point target );
 	void BrushMove( const Point source, const Point target );
