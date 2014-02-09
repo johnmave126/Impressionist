@@ -40,6 +40,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LineBrush.cpp">
+    <ClCompile Include="CircleBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,8 +72,17 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="LineBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="CircleBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+>>>>>>> a723ebf885cf747161596c8464a281e042f72d29
   </ItemGroup>
 </Project>

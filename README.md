@@ -8,3 +8,5 @@ we are artists
 - [x] line width slider
 - [x] line angle slider
 - [ ] lines brush
+- [x] circle brush
+- [ ] scattered points brush
