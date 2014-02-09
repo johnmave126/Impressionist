@@ -17,3 +17,5 @@ we are artists
 - [ ] control direction by gradient
 - [x] clip brush strokes to the region as they're being painted
 - [x] when the cursor is in the painting window, a marker appears on the original image showing where you're painting.
+- [ ] color scaling
+- [ ] "alpha-mapped" brush stroke
