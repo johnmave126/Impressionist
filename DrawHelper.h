@@ -23,4 +23,15 @@
  */
 void DrawCircle(double x, double y, double r, bool filled);
 
+/*
+ * DrawCircle
+ *
+ * Draw a circle
+ *
+ * param p, The point
+ * param r, The radius of the circle
+ * param filled, True if the circle to be filled
+ */
+void DrawCircle(const Point p, double r, bool filled);
+
 #endif

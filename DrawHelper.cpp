@@ -28,3 +28,7 @@ void DrawCircle(double x, double y, double r, bool filled) {
 		glEnd();
 	}
 }
+
+void DrawCircle(const Point p, double r, bool filled) {
+	DrawCircle(p.x, p.y, r, filled);
+}

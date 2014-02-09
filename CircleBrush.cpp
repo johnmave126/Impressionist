@@ -37,7 +37,7 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 	}
 	
 	SetColor( source );
-	DrawCircle(target.x, target.y, pDoc->getSize() >> 1, true);
+	DrawCircle(target, pDoc->getSize() >> 1, true);
 }
 
 void CircleBrush::BrushEnd( const Point source, const Point target )
