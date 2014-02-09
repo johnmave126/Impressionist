@@ -91,3 +91,56 @@ void OriginalView::resizeWindow(int	width,
 	resize(x(), y(), width, height);
 }
 
+void OriginalView::markTracker() {
+	int drawWidth, drawHeight, startrow;;
+	Point cur = m_pDoc->m_curPoint, last = m_pDoc->m_lastPoint;
+	GLvoid* bitstart;
+	const int size = 10;
+	make_current();
+	
+	drawWidth	= min( m_nWindowWidth, m_pDoc->m_nWidth );
+	drawHeight	= min( m_nWindowHeight, m_pDoc->m_nHeight );
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(0, m_nWindowHeight - drawHeight, drawWidth, drawHeight);
+
+	if(last.x <= drawWidth && last.y >= m_nWindowHeight - drawHeight) {
+		last.x -= size >> 1;
+		last.y -= size >> 1;
+		if(last.x < 0) {
+			last.x = 0;
+		}
+		if(last.x + size > drawWidth) {
+			last.x = drawWidth - size;
+		}
+		if(last.y < m_nWindowHeight - drawHeight) {
+			last.y = m_nWindowHeight - drawHeight;
+		}
+		if(last.y + size > m_nWindowHeight) {
+			last.y = m_nWindowHeight - size;
+		}
+
+		//Restore content
+		startrow = m_pDoc->m_nHeight - m_nWindowHeight + last.y;
+		if ( startrow < 0 ) 
+			startrow = 0;
+		bitstart = m_pDoc->m_ucBitmap + 3 * ((m_pDoc->m_nWidth * startrow) + last.x);
+
+		glRasterPos2i( last.x, last.y );
+		glPixelStorei( GL_UNPACK_ALIGNMENT, 1 );
+		glPixelStorei( GL_UNPACK_ROW_LENGTH, m_pDoc->m_nWidth );
+		glDrawBuffer( GL_FRONT );
+		glDrawPixels( size, size, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
+	}
+	
+	if(cur.x <= drawWidth && cur.y >= m_nWindowHeight - drawHeight) {
+		glDrawBuffer(GL_FRONT);
+		glColor3ub(255, 0, 0);
+		glPointSize((float)size);
+		glBegin(GL_POINTS);
+		glVertex2i(cur.x, cur.y);
+		glEnd();
+	}
+	
+	glDisable(GL_SCISSOR_TEST);
+	glFlush();
+}

@@ -30,6 +30,8 @@ public:
 	int		getLineAngle();
 	double	getAlpha();						// get the UI alpha
 	char*	getImageName();					// get the current image name
+
+	void 	markMove(const Point p);		// mark the moving of cursor
 	
 
 // Attributes
@@ -44,6 +46,8 @@ public:
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 
+	Point m_lastPoint;
+	Point m_curPoint;
 
 	// The current active brush.
 	ImpBrush*			m_pCurrentBrush;	

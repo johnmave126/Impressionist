@@ -30,6 +30,8 @@ public:
 
 	void resizeWindow(int width, int height);
 
+	void markTracker();
+
 	ImpressionistDoc*	m_pDoc;
 
 private:

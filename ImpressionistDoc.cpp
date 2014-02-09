@@ -32,6 +32,8 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucBitmap		= NULL;
 	m_ucPainting	= NULL;
 
+	m_lastPoint = Point(-1, -1);
+	m_curPoint = Point(-1, -1);
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount	= NUM_BRUSH_TYPE;
@@ -231,3 +233,22 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 	return GetOriginalPixel( p.x, p.y );
 }
 
+
+//----------------------------------------------------------------
+// Mark the movement of cursor on PaintView
+//----------------------------------------------------------------
+void ImpressionistDoc::markMove( const Point p )
+{
+	if(!m_imageName) {
+		return;
+	}
+	if(m_curPoint.x == -1) {
+		m_lastPoint = p;
+		m_curPoint = p;
+	}
+	else {
+		m_lastPoint = m_curPoint;
+		m_curPoint = p;
+	}
+	m_pUI->m_origView->markTracker();
+}
