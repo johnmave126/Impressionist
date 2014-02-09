@@ -86,6 +86,10 @@ void PaintView::draw()
 	m_nStartCol		= scrollpos.x;
 	m_nEndCol		= m_nStartCol + drawWidth;
 
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(0, m_nWindowHeight - m_nDrawHeight, m_nDrawWidth, m_nDrawHeight);
+
+
 	if ( m_pDoc->m_ucPainting && !isAnEvent) 
 	{
 		RestoreContent();
@@ -135,6 +139,8 @@ void PaintView::draw()
 
 		glDisable(GL_BLEND);
 	}
+	
+	glDisable(GL_SCISSOR_TEST);
 
 	glFlush();
 
