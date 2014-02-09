@@ -11,7 +11,8 @@ we are artists
 - [x] circle brush
 - [x] scattered points brush
 - [x] scattered lines brush
-- [ ] scattered circle brush
+- [x] scattered circle brush
 - [ ] control direction by right mouse
 - [ ] control direction by cursor
 - [ ] control direction by gradient
+- [ ] clip brush strokes to the region as they're being painted
