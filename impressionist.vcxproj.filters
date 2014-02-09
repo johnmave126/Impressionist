@@ -30,6 +30,9 @@
     <ClCompile Include="ImpressionistUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LineBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="OriginalView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -43,6 +46,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScatteredPointsBrush.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SLineBrush.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,6 +68,9 @@
     <ClInclude Include="impressionistUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LineBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="OriginalView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,6 +87,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScatteredPointsBrush.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SLineBrush.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
