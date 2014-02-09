@@ -7,6 +7,7 @@ we are artists
 - [x] alpha slider
 - [x] line width slider
 - [x] line angle slider
-- [ ] lines brush
+- [x] lines brush
 - [x] circle brush
 - [ ] scattered points brush
+- [ ] scattered lines
