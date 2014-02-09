@@ -8,6 +8,7 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
 #include "CircleBrush.h"
+#include "DrawHelper.h"
 #include <math.h>
 
 extern float frand();
@@ -29,24 +30,14 @@ void CircleBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
-	int i, size = pDoc->getSize() >> 1;
-	const int dNumFan = 20;
-	GLfloat delta = 2.0f * M_PI / dNumFan;
 
 	if ( pDoc == NULL ) {
 		printf( "CircleBrush::BrushMove  document is NULL\n" );
 		return;
 	}
 	
-	glBegin( GL_TRIANGLE_FAN );
-		SetColor( source );
-
-		glVertex2d( target.x, target.y );
-		for(i = 0; i <= dNumFan; i++) {
-			glVertex2d(target.x + size * cos(i * delta), target.y + size * sin(i * delta));
-		}
-
-	glEnd();
+	SetColor( source );
+	DrawCircle(target.x, target.y, pDoc->getSize() >> 1, true);
 }
 
 void CircleBrush::BrushEnd( const Point source, const Point target )
