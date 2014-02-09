@@ -16,4 +16,4 @@ we are artists
 - [ ] control direction by cursor
 - [ ] control direction by gradient
 - [x] clip brush strokes to the region as they're being painted
-- [ ] when the cursor is in the painting window, a marker appears on the original image showing where you're painting.
+- [x] when the cursor is in the painting window, a marker appears on the original image showing where you're painting.
