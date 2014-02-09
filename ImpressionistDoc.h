@@ -29,6 +29,7 @@ public:
 	int		getLineWidth();
 	int		getLineAngle();
 	double	getAlpha();						// get the UI alpha
+	ucolor32	getBlendColor();						// get the UI color
 	char*	getImageName();					// get the current image name
 
 	void 	markMove(const Point p);		// mark the moving of cursor

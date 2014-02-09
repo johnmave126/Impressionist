@@ -118,6 +118,15 @@ double ImpressionistDoc::getAlpha()
 	return m_pUI->getAlpha();
 }
 
+
+//---------------------------------------------------------
+// Returns the color of blending.
+//---------------------------------------------------------
+ucolor32 ImpressionistDoc::getBlendColor()
+{
+	return m_pUI->getBlendColor();
+}
+
 //---------------------------------------------------------
 // Load the specified image
 // This is called by the UI when the load image button is 

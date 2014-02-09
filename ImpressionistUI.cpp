@@ -208,6 +208,16 @@ void ImpressionistUI::cb_brushes(Fl_Menu_* o, void* v)
 	whoami(o)->m_brushDialog->show();
 }
 
+//-------------------------------------------------------------
+// Brings up the colors dialog
+// This is called by the UI when the colors menu item
+// is chosen
+//-------------------------------------------------------------
+void ImpressionistUI::cb_colors(Fl_Menu_* o, void* v) 
+{
+	whoami(o)->m_colorDialog->show();
+}
+
 //------------------------------------------------------------
 // Clears the paintview canvas.
 // Called by the UI when the clear canvas menu item is chosen
@@ -297,6 +307,8 @@ void ImpressionistUI::cb_lineAngleSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_nLineAngle=int( ((Fl_Slider *)o)->value() ) ;
 }
+
+
 //-----------------------------------------------------------
 // Updates the brush alpha to use from the value of the alpha
 // slider
@@ -305,6 +317,19 @@ void ImpressionistUI::cb_lineAngleSlides(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_lfAlpha=double( ((Fl_Slider *)o)->value() ) ;
+}
+
+
+//-----------------------------------------------------------
+// Updates the blending color to use from the value of the color
+// chooser
+// Called by the UI when the color chooser is used
+//-----------------------------------------------------------
+void ImpressionistUI::cb_colorChooses(Fl_Widget* o, void* v)
+{
+	Fl_Color_Chooser* c = (Fl_Color_Chooser*)o;
+	((ImpressionistUI*)(o->user_data()))->m_cColor=PACK_COLOR((unsigned)floor(c->r() * 255), (unsigned)floor(c->g() * 255), (unsigned)floor(c->b() * 255));
+	//printf("%lf %lf %lf\n", c->r);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -423,6 +448,35 @@ void ImpressionistUI::setAlpha( double alpha )
 		m_BrushAlphaSlider->value(m_lfAlpha);
 }
 
+//------------------------------------------------
+// Return the color blending
+//------------------------------------------------
+ucolor32 ImpressionistUI::getBlendColor()
+{
+	return m_cColor;
+}
+
+//-------------------------------------------------
+// Set the color blending
+//-------------------------------------------------
+void ImpressionistUI::setBlendColor(unsigned r, unsigned g, unsigned b)
+{
+	m_cColor = PACK_COLOR(r, g, b);
+	if(r < 256 && g < 256 && b < 256) {
+		m_ColorChooser->rgb(r / 255.0, g / 255.0, b / 255.0);
+	}
+}
+
+//-------------------------------------------------
+// Set the color blending
+//-------------------------------------------------
+void ImpressionistUI::setBlendColor(ucolor32 col)
+{
+	unsigned r, g, b;
+	UNPACK_COLOR(r, g, b, col);
+	setBlendColor(r, g, b);
+}
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
@@ -430,6 +484,8 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
 		{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes }, 
 		{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
+
+		{ "&Colors...",	FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_colors, 0, FL_MENU_DIVIDER },
 		
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 		{ 0 },
@@ -490,6 +546,15 @@ ImpressionistUI::ImpressionistUI() {
 	m_nLineAngle = 0;
 	m_nLineWidth = 1;
 
+
+	m_colorDialog = new Fl_Window(230, 270, "Color Selector");
+		// Add the color chooser to the dialog
+		m_ColorChooser = new Fl_Color_Chooser(10, 20, 200, 230, "Color Blending");
+		m_ColorChooser->user_data((void*)(this));	// record self to be used by static callback functions
+		m_ColorChooser->callback(cb_colorChooses);
+		m_ColorChooser->rgb(1.0, 1.0, 1.0);
+		m_ColorChooser->align(FL_ALIGN_TOP);
+		m_ColorChooser->labeltype(FL_NORMAL_LABEL);
 
 	// brush dialog definition
 	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
