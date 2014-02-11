@@ -12,6 +12,7 @@
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <stdlib.h>
+#include <cmath>
 
 class ImpressionistDoc;
 
@@ -30,6 +31,7 @@ public:
 
 	void RestoreContent();
 
+	void markDirectControl(Point);
 	ImpressionistDoc *m_pDoc;
 
 private:
@@ -42,6 +44,7 @@ private:
 			m_nEndCol,
 			m_nWindowWidth, 
 			m_nWindowHeight;
+	Point m_directStartPoint;
 
 };
 

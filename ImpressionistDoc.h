@@ -25,6 +25,7 @@ public:
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
+	void	setDirectType(int type);			// called by the UI to set the stroke direct Type
 	int		getSize();						// get the UI size
 	int		getLineWidth();
 	int		getLineAngle();
@@ -50,11 +51,16 @@ public:
 	Point m_lastPoint;
 	Point m_curPoint;
 
+	//mark the begin and end point to control direction
+	Point m_directBegin;
+	Point m_directEnd;
+
 	// The current active brush.
 	ImpBrush*			m_pCurrentBrush;	
 	// Size of the brush.
 	int m_nSize;							
-
+	// The current stroke direct control method
+	int m_nCurrentDirect;
 	ImpressionistUI*	m_pUI;
 
 // Operations
