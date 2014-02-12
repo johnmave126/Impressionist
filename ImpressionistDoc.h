@@ -25,6 +25,7 @@ public:
 	int		loadAlphaMapping(char *iname);	// called by the UI to load alpha mapping
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
+	int     swapCanvas();                  // called by the UI to swap the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
 	void	setDirectType(int type);			// called by the UI to set the stroke direct Type
 	int		getSize();						// get the UI size

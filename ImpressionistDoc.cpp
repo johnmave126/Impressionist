@@ -311,6 +311,27 @@ void ImpressionistDoc::genMappingTexture() {
 // This is called by the UI when the clear canvas menu item is 
 // chosen
 //-----------------------------------------------------------------
+int ImpressionistDoc::swapCanvas() 
+{
+	unsigned char *tmp;
+	if(!m_ucBitmap) {
+		fl_alert("Please load image first");
+		return 1;
+	}
+	tmp = m_ucBitmap;
+	m_ucBitmap = m_ucPainting;
+	m_ucPainting = tmp;
+
+	m_pUI->m_origView->refresh();
+	m_pUI->m_paintView->refresh();
+	return 0;
+}
+
+//----------------------------------------------------------------
+// Swap the drawing canvas
+// This is called by the UI when the swap canvas menu item is 
+// chosen
+//-----------------------------------------------------------------
 int ImpressionistDoc::clearCanvas() 
 {
 

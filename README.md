@@ -19,5 +19,5 @@ we are artists
 - [x] when the cursor is in the painting window, a marker appears on the original image showing where you're painting.
 - [x] color scaling
 - [x] "alpha-mapped" brush stroke
-- [ ] Add a control to swap the contents of the painting window and the contents of the original image window.
+- [x] Add a control to swap the contents of the painting window and the contents of the original image window.
 - [ ] filter kernel design interface
