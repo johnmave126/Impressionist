@@ -237,9 +237,13 @@ void PaintView::resizeWindow(int width, int height)
 
 void PaintView::SaveCurrentContent()
 {
+	int ori_align, ori_row_l;
 	// Tell openGL to read from the front buffer when capturing
 	// out paint strokes
 	glReadBuffer(GL_FRONT);
+
+	glGetIntegerv( GL_PACK_ALIGNMENT, &ori_align);
+	glGetIntegerv( GL_PACK_ROW_LENGTH, &ori_row_l);
 
 	glPixelStorei( GL_PACK_ALIGNMENT, 1 );
 	glPixelStorei( GL_PACK_ROW_LENGTH, m_pDoc->m_nPaintWidth );
@@ -251,12 +255,19 @@ void PaintView::SaveCurrentContent()
 				  GL_RGB, 
 				  GL_UNSIGNED_BYTE, 
 				  m_pPaintBitstart );
+
+	glPixelStorei( GL_PACK_ALIGNMENT, ori_align );
+	glPixelStorei( GL_PACK_ROW_LENGTH, ori_row_l );
 }
 
 
 void PaintView::RestoreContent()
 {
-	glDrawBuffer(GL_BACK);
+	int ori_align, ori_row_l;
+	//glDrawBuffer(GL_BACK);
+
+	glGetIntegerv( GL_UNPACK_ALIGNMENT, &ori_align);
+	glGetIntegerv( GL_UNPACK_ROW_LENGTH, &ori_row_l);
 
 	glClear( GL_COLOR_BUFFER_BIT );
 
@@ -268,7 +279,9 @@ void PaintView::RestoreContent()
 				  GL_RGB, 
 				  GL_UNSIGNED_BYTE, 
 				  m_pPaintBitstart);
-
+	
+	glPixelStorei( GL_UNPACK_ALIGNMENT, ori_align );
+	glPixelStorei( GL_UNPACK_ROW_LENGTH, ori_row_l );
 //	glDrawBuffer(GL_FRONT);
 }
 

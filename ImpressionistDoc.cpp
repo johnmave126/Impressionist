@@ -279,6 +279,7 @@ int ImpressionistDoc::loadAlphaMapping(char *iname)
 // This is called by the View when the gl context is reset
 //-----------------------------------------------------------------
 void ImpressionistDoc::genMappingTexture() {
+	int ori_align, ori_row_l;
 	if(m_bMapFlag) {
 		glDeleteTextures(1, &m_uMapTextureID);
 		m_bMapFlag = false;
@@ -286,16 +287,23 @@ void ImpressionistDoc::genMappingTexture() {
 	if(!m_ucMapping) {
 		return;
 	}
+	
+	glGetIntegerv( GL_UNPACK_ALIGNMENT, &ori_align);
+	glGetIntegerv( GL_UNPACK_ROW_LENGTH, &ori_row_l);
+
 	glGenTextures( 1, &m_uMapTextureID );
 	glBindTexture( GL_TEXTURE_2D, m_uMapTextureID );
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glPixelStorei( GL_UNPACK_ROW_LENGTH, m_nMappingWidth );
+	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	//glPixelStorei( GL_UNPACK_ROW_LENGTH, m_nMappingWidth );
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_ALPHA, m_nMappingWidth, m_nMappingHeight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, m_ucMapping);
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+
+	glPixelStorei( GL_UNPACK_ALIGNMENT, ori_align );
+	glPixelStorei( GL_UNPACK_ROW_LENGTH, ori_row_l );
 }
 
 //----------------------------------------------------------------
