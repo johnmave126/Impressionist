@@ -44,6 +44,7 @@ public:
 	Fl_Slider*			m_LineAngleSlider;
 	Fl_Slider*			m_BrushAlphaSlider;
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*			m_LoadAlphaMappingButton;
 
 // for color picking
 	Fl_Window*			m_colorDialog;
@@ -106,6 +107,7 @@ private:
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
 	static void	cb_colorChooses(Fl_Widget* o, void* v);
+	static void	cb_load_alpha_mapping_button(Fl_Widget* o, void* v);
 
 };
 

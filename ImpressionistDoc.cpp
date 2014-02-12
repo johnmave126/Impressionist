@@ -19,6 +19,7 @@
 #include "SPointsBrush.h"
 #include "SLineBrush.h"
 #include "SCircleBrush.h"
+#include "AlphaMappingBrush.h"
 
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
@@ -27,10 +28,13 @@ ImpressionistDoc::ImpressionistDoc()
 {
 	// Set NULL image name as init. 
 	m_imageName[0]	='\0';	
+	m_alphaMappingName[0] = '\0';
 
 	m_nWidth		= -1;
 	m_ucBitmap		= NULL;
 	m_ucPainting	= NULL;
+	m_nMappingWidth = -1;
+	m_ucMapping = NULL;
 
 	m_lastPoint = Point(-1, -1);
 	m_curPoint = Point(-1, -1);
@@ -52,6 +56,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new SLineBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
 		= new SCircleBrush( this, "Scattered Circles" );
+	ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPING]	
+		= new AlphaMappingBrush( this, "Alpha Mapping" );
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
@@ -73,6 +79,14 @@ void ImpressionistDoc::setUI(ImpressionistUI* ui)
 char* ImpressionistDoc::getImageName() 
 {
 	return m_imageName;
+}
+
+//---------------------------------------------------------
+// Returns the active alpha mapping name
+//---------------------------------------------------------
+char* ImpressionistDoc::getAlphaMappingName() 
+{
+	return m_alphaMappingName;
 }
 
 //---------------------------------------------------------
@@ -190,6 +204,87 @@ int ImpressionistDoc::saveImage(char *iname)
 	writeBMP(iname, m_nPaintWidth, m_nPaintHeight, m_ucPainting);
 
 	return 1;
+}
+
+//---------------------------------------------------------
+// Load the specified alpha mapping
+// This is called by the UI when the load alpha mapping button is 
+// pressed.
+//---------------------------------------------------------
+int ImpressionistDoc::loadAlphaMapping(char *iname) 
+{
+	// try to open the image to read
+	unsigned char*	data;
+	int				i,
+					width, height, all,
+					max;
+
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max);
+
+	if ( (data=readBMP(iname, width, height))==NULL ) 
+	{
+		fl_alert("Can't load bitmap file");
+		return 0;
+	}
+
+	if(!IS_2_POWER(width) || !IS_2_POWER(height)) {
+		fl_alert("The height and width must be power of 2");
+		return 0;
+	}
+
+	if(width != height) {
+		fl_alert("The height must be the same as the width");
+		return 0;
+	}
+
+	if(width > max) {
+		fl_alert("The dimension exceeds the limit of OPENGL of %d px", max);
+		return 0;
+	}
+
+	// reflect the fact of loading the new image
+	m_nMappingWidth	= width;
+	m_nMappingHeight = height;
+	all = width * height;
+
+	// release old storage
+	if ( m_ucMapping ) delete [] m_ucMapping;
+	
+	m_ucMapping = new GLubyte[all];
+	
+	for(i = 0; i < all; i++) {
+		m_ucMapping[i] = 255 - (data[3 * i] + data[3 * i + 1] + data[3 * i + 1]) / 3;
+	}
+
+	m_bMapFlag = true;
+
+	delete [] data;
+
+	return 1;
+}
+
+//----------------------------------------------------------------
+// Generate the texture of alpha mapping
+// This is called by the View when the gl context is reset
+//-----------------------------------------------------------------
+void ImpressionistDoc::genMappingTexture() {
+	if(m_bMapFlag) {
+		glDeleteTextures(1, &m_uMapTextureID);
+		m_bMapFlag = false;
+	}
+	if(!m_ucMapping) {
+		return;
+	}
+	glGenTextures( 1, &m_uMapTextureID );
+	glBindTexture( GL_TEXTURE_2D, m_uMapTextureID );
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glPixelStorei( GL_UNPACK_ROW_LENGTH, m_nMappingWidth );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_ALPHA, m_nMappingWidth, m_nMappingHeight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, m_ucMapping);
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 }
 
 //----------------------------------------------------------------

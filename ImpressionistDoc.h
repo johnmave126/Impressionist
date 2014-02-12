@@ -22,6 +22,7 @@ public:
 	int		loadImage(char *iname);			// called by the UI to load image
 	int		saveImage(char *iname);			// called by the UI to save image
 
+	int		loadAlphaMapping(char *iname);	// called by the UI to load alpha mapping
 
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
@@ -29,8 +30,10 @@ public:
 	int		getLineWidth();
 	int		getLineAngle();
 	double	getAlpha();						// get the UI alpha
-	ucolor32	getBlendColor();						// get the UI color
+	ucolor32	getBlendColor();			// get the UI color
 	char*	getImageName();					// get the current image name
+	char*	getAlphaMappingName();			// get the current alpha mapping name
+	void	genMappingTexture();			// generate the texture in GL
 
 	void 	markMove(const Point p);		// mark the moving of cursor
 	
@@ -46,6 +49,14 @@ public:
 	// Bitmaps for original image and painting.
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
+
+	// Dimensions of alpha mapping texture
+	int				m_nMappingWidth,
+					m_nMappingHeight;
+	
+	GLubyte*		m_ucMapping;
+	unsigned int	m_uMapTextureID;
+	bool			m_bMapFlag;
 
 	Point m_lastPoint;
 	Point m_curPoint;
@@ -67,6 +78,7 @@ public:
 
 private:
 	char			m_imageName[256];
+	char			m_alphaMappingName[256];
 
 };
 

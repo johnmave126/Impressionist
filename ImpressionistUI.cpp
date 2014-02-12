@@ -271,6 +271,12 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 		pUI->m_LineWidthSlider->deactivate();
 	}
 
+	if(type == BRUSH_ALPHA_MAPPING) {
+		pUI->m_LoadAlphaMappingButton->activate();
+	}
+	else {
+		pUI->m_LoadAlphaMappingButton->deactivate();
+	}
 
 	pDoc->setBrushType(type);
 }
@@ -317,6 +323,21 @@ void ImpressionistUI::cb_lineAngleSlides(Fl_Widget* o, void* v)
 void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 {
 	((ImpressionistUI*)(o->user_data()))->m_lfAlpha=double( ((Fl_Slider *)o)->value() ) ;
+}
+
+
+//-----------------------------------------------------------
+// Prompt to load alpha mapping texture
+// Called by the UI when the load alpha mapping is pressed
+//-----------------------------------------------------------
+void ImpressionistUI::cb_load_alpha_mapping_button(Fl_Widget* o, void* v)
+{
+	ImpressionistDoc *pDoc=((ImpressionistUI*)(o->user_data()))->getDocument();
+
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getAlphaMappingName() );
+	if (newfile != NULL) {
+		pDoc->loadAlphaMapping(newfile);
+	}
 }
 
 
@@ -505,6 +526,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {"Scattered Points",	FL_ALT+'q', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_POINTS},
   {"Scattered Lines",	FL_ALT+'m', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_LINES},
   {"Scattered Circles",	FL_ALT+'d', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES},
+  {"Alpha Mapping",		FL_ALT+'a', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA_MAPPING},
   {0}
 };
 
@@ -556,8 +578,10 @@ ImpressionistUI::ImpressionistUI() {
 		m_ColorChooser->align(FL_ALIGN_TOP);
 		m_ColorChooser->labeltype(FL_NORMAL_LABEL);
 
+	m_colorDialog->end();
+
 	// brush dialog definition
-	m_brushDialog = new Fl_Window(400, 325, "Brush Dialog");
+	m_brushDialog = new Fl_Window(400, 360, "Brush Dialog");
 		// Add a brush type choice to the dialog
 		m_BrushTypeChoice = new Fl_Choice(50,10,150,25,"&Brush");
 		m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -623,6 +647,12 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_lfAlpha);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_alphaSlides);
+
+		// Add alpha mapping loading button to the dialog
+		m_LoadAlphaMappingButton = new Fl_Button(10, 315, 150, 25,"&Load Alpha Mapping");
+		m_LoadAlphaMappingButton->user_data((void*)(this));
+		m_LoadAlphaMappingButton->callback(cb_load_alpha_mapping_button);
+		m_LoadAlphaMappingButton->deactivate();
 
     m_brushDialog->end();	
 

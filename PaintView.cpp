@@ -59,7 +59,16 @@ void PaintView::draw()
 		ortho();
 
 		glClear( GL_COLOR_BUFFER_BIT );
+
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_SCISSOR_TEST);
 	}
+	if(!valid() || m_pDoc->m_bMapFlag) 
+		m_pDoc->genMappingTexture();
+		
 
 	Point scrollpos;// = GetScrollPosition();
 	scrollpos.x = 0;
@@ -86,7 +95,6 @@ void PaintView::draw()
 	m_nStartCol		= scrollpos.x;
 	m_nEndCol		= m_nStartCol + drawWidth;
 
-	glEnable(GL_SCISSOR_TEST);
 	glScissor(0, m_nWindowHeight - m_nDrawHeight, m_nDrawWidth, m_nDrawHeight);
 
 
@@ -98,8 +106,6 @@ void PaintView::draw()
 	
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 		// Clear it after processing.
 		isAnEvent	= 0;	
@@ -137,10 +143,7 @@ void PaintView::draw()
 			break;
 		}
 
-		glDisable(GL_BLEND);
 	}
-	
-	glDisable(GL_SCISSOR_TEST);
 
 	glFlush();
 

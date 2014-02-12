@@ -23,8 +23,6 @@ void SPointsBrush::BrushBegin( const Point source, const Point target )
 	ImpressionistDoc* pDoc = GetDocument();
 	ImpressionistUI* dlg=pDoc->m_pUI;
 
-	glPointSize( 1.0f );
-
 	BrushMove( source, target );
 }
 
@@ -39,6 +37,7 @@ void SPointsBrush::BrushMove( const Point source, const Point target )
 		return;
 	}
 	
+	glPointSize( 1.0f );
 	glBegin( GL_POINTS );
 
 		for(x = target.x - (size >> 1), i = 0; i <= size; i++, x++) {

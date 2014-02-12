@@ -21,4 +21,6 @@ typedef UINT32 ucolor32;
 #define UNPACK_COLOR(r, g, b, col) \
 		(r = col & 0xFF, g = (col >> 8) & 0xFF, b = (col >> 16) & 0xFF, col)
 
+#define IS_2_POWER(x)	((x != 0) && ((x & (~x + 1)) == x))
+
 #endif
