@@ -61,6 +61,7 @@ ImpressionistDoc::ImpressionistDoc()
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
+	m_nCurrentDirect = DIRECT_SLIDER;
 
 }
 
@@ -97,6 +98,16 @@ void ImpressionistDoc::setBrushType(int type)
 {
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[type];
 }
+
+//---------------------------------------------------------
+// Called by the UI when the user changes the stroke direction type.
+// type: one of the defined brush types.
+//---------------------------------------------------------
+void ImpressionistDoc::setDirectType(int type)
+{
+	m_nCurrentDirect= type;
+}
+
 
 //---------------------------------------------------------
 // Returns the size of the brush.

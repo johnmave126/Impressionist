@@ -266,9 +266,11 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 	if(type == BRUSH_LINES || type == BRUSH_SCATTERED_LINES) {
 		pUI->m_LineAngleSlider->activate();
 		pUI->m_LineWidthSlider->activate();
+		pUI->m_StrokeDirectChoice->activate();
 	} else {
 		pUI->m_LineAngleSlider->deactivate();
 		pUI->m_LineWidthSlider->deactivate();
+		pUI->m_StrokeDirectChoice->deactivate();
 	}
 
 	if(type == BRUSH_ALPHA_MAPPING) {
@@ -280,6 +282,17 @@ void ImpressionistUI::cb_brushChoice(Fl_Widget* o, void* v)
 
 	pDoc->setBrushType(type);
 }
+
+void ImpressionistUI::cb_directChoice(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc=pUI->getDocument();
+
+	int type=(int)v;
+	printf("set type %d\n", type);
+	pDoc->setDirectType(type);
+}
+
 
 //------------------------------------------------------------
 // Clears the paintview canvas.
@@ -447,7 +460,7 @@ void ImpressionistUI::setLineAngle( int size )
 	m_nLineAngle=size;
 
 	if (size<=359 && size >= 0) 
-		m_LineAngleSlider->value(m_nSize);
+		m_LineAngleSlider->value(m_nLineAngle);
 }
 
 //------------------------------------------------
@@ -530,6 +543,13 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {0}
 };
 
+Fl_Menu_Item ImpressionistUI::strokeDirectMenu[NUM_DIRECT+1] = {
+	{"Slider/Right Mouse",FL_ALT+'s', (Fl_Callback *)ImpressionistUI::cb_directChoice, (void *)DIRECT_SLIDER},
+	{"Gradient",	    FL_ALT+'g', (Fl_Callback *)ImpressionistUI::cb_directChoice, (void *)DIRECT_GRADIENT},
+	{"Brush Direction",	FL_ALT+'b', (Fl_Callback *)ImpressionistUI::cb_directChoice, (void *)DIRECT_BRUSH},
+    {0}
+};
+
 
 
 //----------------------------------------------------
@@ -587,6 +607,13 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
 		m_BrushTypeChoice->menu(brushTypeMenu);
 		m_BrushTypeChoice->callback(cb_brushChoice);
+
+		// Add a stroke direction type choice to the dialog
+		m_StrokeDirectChoice = new Fl_Choice(115,40,150,25,"&Stroke Direction");
+		m_StrokeDirectChoice->user_data((void*)(this));	// record self to be used by static callback functions
+		m_StrokeDirectChoice->menu(strokeDirectMenu);
+		m_StrokeDirectChoice->callback(cb_directChoice);
+		m_StrokeDirectChoice->deactivate();
 
 		m_ClearCanvasButton = new Fl_Button(240,10,150,25,"&Clear Canvas");
 		m_ClearCanvasButton->user_data((void*)(this));

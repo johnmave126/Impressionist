@@ -24,7 +24,14 @@ enum
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 
-
+enum
+{
+	DIRECT_SLIDER = 0,
+	DIRECT_GRADIENT,
+	DIRECT_BRUSH,
+	NUM_DIRECT
+};
+		
 class ImpressionistDoc; // Pre-declaring class
 
 class Point 

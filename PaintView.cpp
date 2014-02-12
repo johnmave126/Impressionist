@@ -129,13 +129,29 @@ void PaintView::draw()
 			RestoreContent();
 			break;
 		case RIGHT_MOUSE_DOWN:
-
+			if(m_pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
+				m_directStartPoint = target;
+				SaveCurrentContent();
+			}
 			break;
 		case RIGHT_MOUSE_DRAG:
-
+			if(m_pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
+				markDirectControl(target);
+			}
 			break;
 		case RIGHT_MOUSE_UP:
-
+			if(m_pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
+				int deltax = target.x - m_directStartPoint.x;
+				int deltay = target.y - m_directStartPoint.y;
+				double angle = tanh((double)deltay / deltay); 
+				int degree = angle * 360 / (2 * PI);
+				if(deltax > 0 && deltay > 0) degree += 90;
+				else if(deltax > 0 && deltay < 0) degree += 180;
+				else if(deltax <0 && deltay < 0) degree += 270;
+				printf("set degree %d\n", degree);
+				m_pDoc->m_pUI->setLineAngle(degree);
+				RestoreContent();
+			}
 			break;
 
 		default:
@@ -254,4 +270,18 @@ void PaintView::RestoreContent()
 				  m_pPaintBitstart);
 
 //	glDrawBuffer(GL_FRONT);
+}
+
+void PaintView::markDirectControl(Point target)
+{
+    RestoreContent();
+	if(target.x <= m_nWindowWidth && target.y <= m_nWindowHeight) {
+		glColor3ub(255, 0, 0);
+		glLineWidth(2);
+		glBegin(GL_LINES);
+		glVertex2i(m_directStartPoint.x, m_directStartPoint.y);
+		glVertex2i(target.x, target.y);
+		glEnd();
+	}
+	glFlush();
 }

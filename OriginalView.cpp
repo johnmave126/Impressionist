@@ -100,9 +100,11 @@ void OriginalView::markTracker() {
 	
 	drawWidth	= min( m_nWindowWidth, m_pDoc->m_nWidth );
 	drawHeight	= min( m_nWindowHeight, m_pDoc->m_nHeight );
+	//restric drawing in the image area
 	glEnable(GL_SCISSOR_TEST);
 	glScissor(0, m_nWindowHeight - drawHeight, drawWidth, drawHeight);
 
+	//draw last point pixels back
 	if(last.x <= drawWidth && last.y >= m_nWindowHeight - drawHeight) {
 		last.x -= size >> 1;
 		last.y -= size >> 1;
@@ -131,7 +133,8 @@ void OriginalView::markTracker() {
 		glDrawBuffer( GL_FRONT );
 		glDrawPixels( size, size, GL_RGB, GL_UNSIGNED_BYTE, bitstart );
 	}
-	
+
+	//put marker on current point	
 	if(cur.x <= drawWidth && cur.y >= m_nWindowHeight - drawHeight) {
 		glDrawBuffer(GL_FRONT);
 		glColor3ub(255, 0, 0);
