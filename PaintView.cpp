@@ -143,7 +143,7 @@ void PaintView::draw()
 			if(m_pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
 				int deltax = target.x - m_directStartPoint.x;
 				int deltay = target.y - m_directStartPoint.y;
-				double angle = tanh((double)deltay / deltay); 
+				double angle = tanh((double)deltax / deltay); 
 				int degree = angle * 360 / (2 * PI);
 				if(deltax > 0 && deltay > 0) degree += 90;
 				else if(deltax > 0 && deltay < 0) degree += 180;

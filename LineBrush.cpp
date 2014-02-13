@@ -20,13 +20,26 @@ void LineBrush::BrushBegin( const Point source, const Point target )
 	BrushMove( source, target );
 }
 
-double LineBrush::getAngle() {
+double LineBrush::getAngle(Point source) {
 	ImpressionistDoc* pDoc = GetDocument();
 	double angle;
 	if(pDoc->m_nCurrentDirect == DIRECT_GRADIENT) {
-		//to do....
-		angle = pDoc->getLineAngle()*2*PI/360.0;
+		Point gradient = pDoc->GetGradient(source);
+
+		//caluate degree using gradient
+		int deltax = gradient.x;
+		int deltay = gradient.y;
+		angle = tanh((double)deltax / deltay); 
+		int degree = angle * 360 / (2 * PI);
+		if(deltax > 0 && deltay > 0) degree += 90;
+		else if(deltax > 0 && deltay < 0) degree += 180;
+		else if(deltax <0 && deltay < 0) degree += 270;
+		printf("degree is %d\n", degree);
+		//perpendicular to gradient
+		angle = (degree-90) * 2 * PI / 360.0;
 	} else if (pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
+		angle = pDoc->getLineAngle()*2*PI/360.0;
+	} else {
 		angle = pDoc->getLineAngle()*2*PI/360.0;
 	}
 	return angle;
@@ -41,8 +54,7 @@ void LineBrush::BrushMove( const Point source, const Point target )
 		printf( "LineBrush::BrushMove  document is NULL\n" );
 		return;
 	}
-	double angle = getAngle();
-	
+	double angle = getAngle(source);
 	int length = pDoc->getSize();
 	int startx = target.x - length/2 * cos(angle);
 	int starty = target.y - length/2 * sin(angle); 

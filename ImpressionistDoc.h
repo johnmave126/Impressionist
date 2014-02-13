@@ -10,6 +10,9 @@
 #include "impressionist.h"
 #include "bitmap.h"
 
+const int X_KERNAL[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 2};
+const int Y_KERNAL[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+						 
 class ImpressionistUI;
 
 class ImpressionistDoc 
@@ -86,6 +89,7 @@ public:
 	GLubyte* GetOriginalPixel( const Point p );  
 	int		GetLuminance(int x, int y);
 	int		GetLuminance(const Point p);
+	Point	GetGradient(const Point p);
 
 
 private:

@@ -404,6 +404,21 @@ int ImpressionistDoc::GetLuminance(const Point p) {
 	return GetLuminance(p.x, p.y);
 }
 
+Point ImpressionistDoc::GetGradient(const Point p) {
+	Point result(0, 0);
+	int lumi;
+	for(int i=0; i<3; i++) {
+		for(int j=0; j<3; j++) {
+			lumi = GetLuminance(p.x+i-1, p.y+j-1);
+			result.x += X_KERNAL[i*3+j] * lumi;
+			result.y += Y_KERNAL[i*3+j] * lumi;
+		}
+	}
+	result.x /= 9;
+	result.y /= 9;
+	return result;
+}
+
 //----------------------------------------------------------------
 // Mark the movement of cursor on PaintView
 //----------------------------------------------------------------

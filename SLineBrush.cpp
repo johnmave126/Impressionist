@@ -19,7 +19,7 @@ void SLineBrush::BrushMove(const Point source, const Point target)
 		printf( "Scattered LineBrush::BrushMove  document is NULL\n" );
 		return;
 	}
-	double angle = pDoc->getLineAngle() * 2 * PI / 360.0;
+	double angle = getAngle(source);
 	int length = pDoc->getSize();
 	int randx, randy, startx, starty, endx, endy;
 	int x, y;
