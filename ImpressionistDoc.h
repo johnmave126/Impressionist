@@ -52,6 +52,9 @@ public:
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 
+	//grayscale image for gradient operation
+	int**			m_nGrayImg;
+
 	// Dimensions of alpha mapping texture
 	int				m_nMappingWidth,
 					m_nMappingHeight;
@@ -81,6 +84,8 @@ public:
 	GLubyte* GetOriginalPixel( int x, int y );   
 	// Get the color of the original picture at the specified point	
 	GLubyte* GetOriginalPixel( const Point p );  
+	int		GetLuminance(int x, int y);
+	int		GetLuminance(const Point p);
 
 
 private:

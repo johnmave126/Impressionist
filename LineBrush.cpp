@@ -20,6 +20,18 @@ void LineBrush::BrushBegin( const Point source, const Point target )
 	BrushMove( source, target );
 }
 
+double LineBrush::getAngle() {
+	ImpressionistDoc* pDoc = GetDocument();
+	double angle;
+	if(pDoc->m_nCurrentDirect == DIRECT_GRADIENT) {
+		//to do....
+		angle = pDoc->getLineAngle()*2*PI/360.0;
+	} else if (pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
+		angle = pDoc->getLineAngle()*2*PI/360.0;
+	}
+	return angle;
+}
+		
 void LineBrush::BrushMove( const Point source, const Point target )
 {
 	ImpressionistDoc* pDoc = GetDocument();
@@ -29,8 +41,8 @@ void LineBrush::BrushMove( const Point source, const Point target )
 		printf( "LineBrush::BrushMove  document is NULL\n" );
 		return;
 	}
-
-	double angle = pDoc->getLineAngle()*2*PI/360.0;
+	double angle = getAngle();
+	
 	int length = pDoc->getSize();
 	int startx = target.x - length/2 * cos(angle);
 	int starty = target.y - length/2 * sin(angle); 
