@@ -414,8 +414,8 @@ Point ImpressionistDoc::GetGradient(const Point p) {
 			result.y += Y_KERNAL[i*3+j] * lumi;
 		}
 	}
-	result.x /= 9;
-	result.y /= 9;
+//	result.x /= 9;
+//	result.y /= 9;
 	return result;
 }
 

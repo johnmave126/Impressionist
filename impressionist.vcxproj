@@ -150,6 +150,7 @@
     <ClCompile Include="SCircleBrush.cpp" />
     <ClCompile Include="SPointsBrush.cpp" />
     <ClCompile Include="SLineBrush.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlphaMappingBrush.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="PointBrush.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

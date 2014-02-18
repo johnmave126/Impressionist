@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include <cmath>
-#define PI 3.14159265
 
 // Each brush type has an associated constant.
 enum

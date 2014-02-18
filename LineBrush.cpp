@@ -1,5 +1,6 @@
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include "Util.h"
 #include "LineBrush.h"
 
 extern float frand();
@@ -16,31 +17,22 @@ void LineBrush::BrushBegin( const Point source, const Point target )
 
 	int width = pDoc->getLineWidth();
 	glLineWidth( (float)width );
-
+	m_cur = target;
+	m_prev = target;
 	BrushMove( source, target );
 }
 
 double LineBrush::getAngle(Point source) {
 	ImpressionistDoc* pDoc = GetDocument();
-	double angle;
+	double angle = pDoc->getLineAngle()*2*PI/360.0;
 	if(pDoc->m_nCurrentDirect == DIRECT_GRADIENT) {
+		//caluate degree using gradient and perpendicular to it
 		Point gradient = pDoc->GetGradient(source);
-
-		//caluate degree using gradient
-		int deltax = gradient.x;
-		int deltay = gradient.y;
-		angle = tanh((double)deltax / deltay); 
-		int degree = angle * 360 / (2 * PI);
-		if(deltax > 0 && deltay > 0) degree += 90;
-		else if(deltax > 0 && deltay < 0) degree += 180;
-		else if(deltax <0 && deltay < 0) degree += 270;
-		printf("degree is %d\n", degree);
-		//perpendicular to gradient
-		angle = (degree-90) * 2 * PI / 360.0;
-	} else if (pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
-		angle = pDoc->getLineAngle()*2*PI/360.0;
-	} else {
-		angle = pDoc->getLineAngle()*2*PI/360.0;
+		int degree = util::calDegree(gradient.x, gradient.y);
+		printf("gradient %d, %d, degree %d\n", gradient.x, gradient.y, degree);
+		angle = util::degree2angle(degree + 90);
+	} else if (pDoc->m_nCurrentDirect == DIRECT_BRUSH) {
+		angle = util::calAngle(m_cur.x - m_prev.x, m_cur.y - m_prev.y);
 	}
 	return angle;
 }
@@ -54,6 +46,8 @@ void LineBrush::BrushMove( const Point source, const Point target )
 		printf( "LineBrush::BrushMove  document is NULL\n" );
 		return;
 	}
+	m_prev = m_cur;
+	m_cur = target;
 	double angle = getAngle(source);
 	int length = pDoc->getSize();
 	int startx = target.x - length/2 * cos(angle);

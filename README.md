@@ -13,7 +13,7 @@ we are artists
 - [x] scattered lines brush
 - [x] scattered circle brush
 - [x] control direction by right mouse
-- [ ] control direction by cursor
+- [x] control direction by brush
 - [x] control direction by gradient (get gradient from ImpDoc)
 - [x] clip brush strokes to the region as they're being painted
 - [x] when the cursor is in the painting window, a marker appears on the original image showing where you're painting.
