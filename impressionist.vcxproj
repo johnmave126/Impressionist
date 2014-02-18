@@ -142,6 +142,7 @@
     <ClCompile Include="Impressionist.cpp" />
     <ClCompile Include="ImpressionistDoc.cpp" />
     <ClCompile Include="ImpressionistUI.cpp" />
+    <ClCompile Include="InkBrush.cpp" />
     <ClCompile Include="LineBrush.cpp" />
     <ClCompile Include="OriginalView.cpp" />
     <ClCompile Include="PaintView.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="AlphaMappingBrush.h" />
     <ClInclude Include="bitmap.h" />
     <ClInclude Include="DrawHelper.h" />
+    <ClInclude Include="InkBrush.h" />
     <ClInclude Include="SCircleBrush.h" />
     <ClInclude Include="SLineBrush.h" />
     <ClInclude Include="LineBrush.h" />
@@ -171,7 +173,6 @@
     <ClInclude Include="PointBrush.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

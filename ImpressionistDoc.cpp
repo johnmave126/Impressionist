@@ -19,6 +19,7 @@
 #include "SPointsBrush.h"
 #include "SLineBrush.h"
 #include "SCircleBrush.h"
+#include "InkBrush.h"
 #include "AlphaMappingBrush.h"
 
 
@@ -57,6 +58,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new SLineBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
 		= new SCircleBrush( this, "Scattered Circles" );
+	ImpBrush::c_pBrushes[BRUSH_INK]	
+		= new InkBrush( this, "Ink Brush" );
 	ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPING]	
 		= new AlphaMappingBrush( this, "Alpha Mapping" );
 
