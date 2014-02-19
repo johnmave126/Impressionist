@@ -374,7 +374,6 @@ void ImpressionistUI::cb_colorChooses(Fl_Widget* o, void* v)
 {
 	Fl_Color_Chooser* c = (Fl_Color_Chooser*)o;
 	((ImpressionistUI*)(o->user_data()))->m_cColor=PACK_COLOR((unsigned)floor(c->r() * 255), (unsigned)floor(c->g() * 255), (unsigned)floor(c->b() * 255));
-	//printf("%lf %lf %lf\n", c->r);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -599,6 +598,7 @@ ImpressionistUI::ImpressionistUI() {
 	m_lfAlpha = 1.0;
 	m_nLineAngle = 0;
 	m_nLineWidth = 1;
+	m_cColor = PACK_COLOR(255, 255, 255);
 
 
 	m_colorDialog = new Fl_Window(230, 270, "Color Selector");
