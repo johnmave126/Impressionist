@@ -13,6 +13,7 @@
 #include <GL/glu.h>
 #include <stdlib.h>
 #include <cmath>
+#include "Util.h"
 
 class ImpressionistDoc;
 

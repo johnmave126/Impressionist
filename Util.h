@@ -4,7 +4,6 @@
 // header file for utilities
 //
 //
-
 #ifndef UTIL_H
 #define UTIL_H
 
@@ -12,6 +11,7 @@
 #include <functional>
 #include <math.h>
 #include <assert.h>
+#define PI 3.14159265
 
 namespace util {
 	/*
@@ -222,6 +222,11 @@ namespace util {
 	Vec<T, Compare> operator*(T s, const Vec<T, Compare>& v) {
 		return v * s;
 	}
+
+	double degree2angle(int degree);
+	int angle2degree(double angle);
+	int calDegree(int x, int y);
+	double calAngle(int x, int y);
 }
 
 #endif

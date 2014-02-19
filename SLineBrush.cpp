@@ -19,21 +19,24 @@ void SLineBrush::BrushMove(const Point source, const Point target)
 		printf( "Scattered LineBrush::BrushMove  document is NULL\n" );
 		return;
 	}
-	double angle = pDoc->getLineAngle() * 2 * PI / 360.0;
+	double angle = getAngle(source);
 	int length = pDoc->getSize();
 	int randx, randy, startx, starty, endx, endy;
-	int nNumLines = irand(4) + 1;
+	int x, y;
+	int nNumLines = irand(4) + 2;
+	glBegin( GL_LINES );
 	for(int i=0; i<nNumLines; i++) {
-		randx = target.x - (frand() - 0.5) * length;
-		randy = target.y - (frand() - 0.5) * pDoc->getLineWidth() / 2;
-		startx = randx - length / 2 * cos(angle);
-		starty = randy - length / 2 * sin(angle); 
-		endx = randx + length / 2 * cos(angle); 
-		endy = randy + length / 2 * sin(angle); 
-		glBegin( GL_LINES );
-			SetColor( source );
-			glVertex2d( startx, starty);
-			glVertex2d( endx, endy);
-		glEnd();
+		randx = (frand() - 0.5) * length;
+		randy = (frand() - 0.5) * length;
+		x = target.x - randx;
+		y = target.y - randy;
+		SetColor(Point(x, y));
+		startx = x - length / 2 * cos(angle);
+		starty = y - length / 2 * sin(angle); 
+		endx = x + length / 2 * cos(angle); 
+		endy = y + length / 2 * sin(angle); 
+		glVertex2d( startx, starty);
+		glVertex2d( endx, endy);
 	}
+	glEnd();
 }

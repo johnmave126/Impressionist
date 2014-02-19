@@ -10,6 +10,9 @@
 #include "impressionist.h"
 #include "bitmap.h"
 
+const int X_KERNAL[9] = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+const int Y_KERNAL[9] = {1, 2, 1, 0, 0, 0, -1, -2, -1};
+						 
 class ImpressionistUI;
 
 class ImpressionistDoc 
@@ -52,6 +55,9 @@ public:
 	unsigned char*	m_ucBitmap;
 	unsigned char*	m_ucPainting;
 
+	//grayscale image for gradient operation
+	int**			m_nGrayImg;
+
 	// Dimensions of alpha mapping texture
 	int				m_nMappingWidth,
 					m_nMappingHeight;
@@ -81,6 +87,9 @@ public:
 	GLubyte* GetOriginalPixel( int x, int y );   
 	// Get the color of the original picture at the specified point	
 	GLubyte* GetOriginalPixel( const Point p );  
+	int		GetLuminance(int x, int y);
+	int		GetLuminance(const Point p);
+	Point	GetGradient(const Point p);
 
 
 private:

@@ -19,6 +19,7 @@
 #include "SPointsBrush.h"
 #include "SLineBrush.h"
 #include "SCircleBrush.h"
+#include "InkBrush.h"
 #include "AlphaMappingBrush.h"
 
 
@@ -35,6 +36,7 @@ ImpressionistDoc::ImpressionistDoc()
 	m_ucPainting	= NULL;
 	m_nMappingWidth = -1;
 	m_ucMapping = NULL;
+	m_nGrayImg	= NULL;
 
 	m_lastPoint = Point(-1, -1);
 	m_curPoint = Point(-1, -1);
@@ -56,6 +58,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new SLineBrush( this, "Scattered Lines" );
 	ImpBrush::c_pBrushes[BRUSH_SCATTERED_CIRCLES]	
 		= new SCircleBrush( this, "Scattered Circles" );
+	ImpBrush::c_pBrushes[BRUSH_INK]	
+		= new InkBrush( this, "Ink Brush" );
 	ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPING]	
 		= new AlphaMappingBrush( this, "Alpha Mapping" );
 
@@ -199,6 +203,16 @@ int ImpressionistDoc::loadImage(char *iname)
 	m_pUI->m_paintView->resizeWindow(width, height);	
 	m_pUI->m_paintView->refresh();
 
+	// generate grayscale image
+	GLubyte color[3];
+	m_nGrayImg = new int*[m_nWidth];
+	for(int i=0; i<m_nWidth; i++) {
+		m_nGrayImg[i] = new int[m_nHeight]; 
+		for(int j=0; j<m_nHeight; j++) {
+			memcpy ( color, GetOriginalPixel(i, j), 3 );
+			m_nGrayImg[i][j] =  0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2];
+		}
+	}
 
 	return 1;
 }
@@ -369,6 +383,8 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( int x, int y )
 	return (GLubyte*)(m_ucBitmap + 3 * (y*m_nWidth + x));
 }
 
+
+
 //----------------------------------------------------------------
 // Get the color of the pixel in the original image at point p
 //----------------------------------------------------------------
@@ -377,6 +393,34 @@ GLubyte* ImpressionistDoc::GetOriginalPixel( const Point p )
 	return GetOriginalPixel( p.x, p.y );
 }
 
+int ImpressionistDoc::GetLuminance(int x, int y) {
+	if ( x < 0 ) x = 0;
+	else if ( x >= m_nWidth ) x = m_nWidth-1;
+
+	if ( y < 0 ) y = 0;
+	else if ( y >= m_nHeight ) y = m_nHeight-1;
+
+	return m_nGrayImg[x][y]; 
+}
+
+int ImpressionistDoc::GetLuminance(const Point p) {
+	return GetLuminance(p.x, p.y);
+}
+
+Point ImpressionistDoc::GetGradient(const Point p) {
+	Point result(0, 0);
+	int lumi;
+	for(int i=0; i<3; i++) {
+		for(int j=0; j<3; j++) {
+			lumi = GetLuminance(p.x+i-1, p.y+j-1);
+			result.x += X_KERNAL[i*3+j] * lumi;
+			result.y += Y_KERNAL[i*3+j] * lumi;
+		}
+	}
+//	result.x /= 9;
+//	result.y /= 9;
+	return result;
+}
 
 //----------------------------------------------------------------
 // Mark the movement of cursor on PaintView

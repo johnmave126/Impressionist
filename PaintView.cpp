@@ -7,6 +7,7 @@
 #include "impressionist.h"
 #include "impressionistDoc.h"
 #include "impressionistUI.h"
+#include "Util.h"
 #include "paintview.h"
 #include "ImpBrush.h"
 
@@ -143,13 +144,9 @@ void PaintView::draw()
 			if(m_pDoc->m_nCurrentDirect == DIRECT_SLIDER) {
 				int deltax = target.x - m_directStartPoint.x;
 				int deltay = target.y - m_directStartPoint.y;
-				double angle = tanh((double)deltay / deltay); 
-				int degree = angle * 360 / (2 * PI);
-				if(deltax > 0 && deltay > 0) degree += 90;
-				else if(deltax > 0 && deltay < 0) degree += 180;
-				else if(deltax <0 && deltay < 0) degree += 270;
-				printf("set degree %d\n", degree);
-				m_pDoc->m_pUI->setLineAngle(degree);
+				int degree = util::calDegree(deltax, deltay);
+				printf("x %d, y %d,  set degree %d\n", deltax, deltay, degree);
+				if(deltax != 0) m_pDoc->m_pUI->setLineAngle(degree);
 				RestoreContent();
 			}
 			break;

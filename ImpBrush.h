@@ -9,7 +9,6 @@
 
 #include <stdlib.h>
 #include <cmath>
-#define PI 3.14159265
 
 // Each brush type has an associated constant.
 enum
@@ -20,6 +19,7 @@ enum
 	BRUSH_SCATTERED_POINTS,
 	BRUSH_SCATTERED_LINES,
 	BRUSH_SCATTERED_CIRCLES,
+	BRUSH_INK,
 	BRUSH_ALPHA_MAPPING,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
