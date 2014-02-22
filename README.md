@@ -24,3 +24,5 @@ we are artists
 - [x] Add a control to swap the contents of the painting window and the contents of the original image window.
 - [x] Own designed Ink Brush
 - [ ] filter kernel design interface
+- [x] add a "mural" effect
+- [ ] create painting automatically
