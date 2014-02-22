@@ -24,6 +24,7 @@
 
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
+extern float frand();
 
 ImpressionistDoc::ImpressionistDoc() 
 {
@@ -40,6 +41,7 @@ ImpressionistDoc::ImpressionistDoc()
 
 	m_lastPoint = Point(-1, -1);
 	m_curPoint = Point(-1, -1);
+	m_bSetRand = false;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount	= NUM_BRUSH_TYPE;
@@ -118,7 +120,11 @@ void ImpressionistDoc::setDirectType(int type)
 //---------------------------------------------------------
 int ImpressionistDoc::getSize()
 {
-	return m_pUI->getSize();
+	if(m_bSetRand) {
+		return m_pUI->getSize() * frand();
+	} else {
+		return m_pUI->getSize();
+	}
 }
 
 //---------------------------------------------------------
@@ -140,6 +146,11 @@ int ImpressionistDoc::getLineAngle()
 int ImpressionistDoc::getSpace()
 {
 	return m_pUI->getSpace();
+}
+
+bool ImpressionistDoc::getRandSize()
+{
+	return m_pUI->getRandSize();
 }
 
 //---------------------------------------------------------
@@ -436,6 +447,11 @@ Point ImpressionistDoc::GetGradient(const Point p) {
 //	result.x /= 9;
 //	result.y /= 9;
 	return result;
+}
+
+void ImpressionistDoc::setRand(bool val) 
+{
+	m_bSetRand = val;
 }
 
 //----------------------------------------------------------------

@@ -32,12 +32,14 @@ public:
 	int		getLineWidth();
 	int		getLineAngle();
 	int		getSpace();
+	bool	getRandSize();
 	double	getAlpha();						// get the UI alpha
 	ucolor32	getBlendColor();			// get the UI color
 	char*	getImageName();					// get the current image name
 	char*	getAlphaMappingName();			// get the current alpha mapping name
 	void	genMappingTexture();			// generate the texture in GL
 	void 	markMove(const Point p);		// mark the moving of cursor
+	void    setRand(bool);
 
 // Attributes
 public:
@@ -57,7 +59,6 @@ public:
 	// Dimensions of alpha mapping texture
 	int				m_nMappingWidth,
 					m_nMappingHeight;
-	
 	GLubyte*		m_ucMapping;
 	unsigned int	m_uMapTextureID;
 	bool			m_bMapFlag;
@@ -75,6 +76,7 @@ public:
 	int m_nSize;							
 	// The current stroke direct control method
 	int m_nCurrentDirect;
+	bool m_bSetRand;
 	ImpressionistUI*	m_pUI;
 
 // Operations

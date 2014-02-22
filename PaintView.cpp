@@ -100,6 +100,12 @@ void PaintView::draw()
 		int width = m_pDoc->m_nWidth;
 		int height = m_pDoc->m_nHeight;
 		printf("%d %d", width, height);
+		if(m_pDoc->getRandSize()) {
+			m_pDoc->setRand(true);
+		} else {
+			m_pDoc->setRand(false);
+		}
+		
 		m_pDoc->m_pCurrentBrush->BrushBegin(Point(0, 0), Point(0, 0));
 		for(int i=0; i<width; i += space) {
 			for(int j=0; j<height; j += space) {

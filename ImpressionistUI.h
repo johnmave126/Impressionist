@@ -15,6 +15,7 @@
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Output.H>
 
@@ -31,11 +32,10 @@ public:
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
 	Fl_Menu_Bar*		m_menubar;
-								
 	PaintView*			m_paintView;
 	OriginalView*		m_origView;
 
-// for brush dialog
+	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectChoice;
@@ -45,6 +45,7 @@ public:
 	Fl_Slider*			m_BrushAlphaSlider;
 	Fl_Slider*			m_SpaceSlider;
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Check_Button*	m_RandSizeButton;
 	Fl_Button*			m_PaintButton;
 	Fl_Button*			m_LoadAlphaMappingButton;
 
@@ -65,6 +66,9 @@ public:
 
 	int					getSpace();
 	void				setSpace(int size);
+
+	bool				getRandSize();
+	void				setRandSize(bool);
 
 	int					getLineWidth();
 	void				setLineWidth(int size);
@@ -88,6 +92,7 @@ private:
 	int		m_nLineWidth;
 	int		m_nLineAngle;
 	int		m_nSpace;
+	bool	m_bRandSize;
 	ucolor32	m_cColor;
 
 	// Static class members
@@ -118,6 +123,7 @@ private:
 	static void	cb_spaceSlides(Fl_Widget* o, void* v);
 	static void	cb_colorChooses(Fl_Widget* o, void* v);
 	static void	cb_paint_button(Fl_Widget* o, void* v);
+	static void	cb_rand_size_button(Fl_Widget* o, void* v);
 	static void	cb_load_alpha_mapping_button(Fl_Widget* o, void* v);
 
 };
