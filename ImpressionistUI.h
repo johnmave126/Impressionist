@@ -39,29 +39,32 @@ public:
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectChoice;
-
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_LineWidthSlider;
 	Fl_Slider*			m_LineAngleSlider;
 	Fl_Slider*			m_BrushAlphaSlider;
+	Fl_Slider*			m_SpaceSlider;
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Button*			m_PaintButton;
 	Fl_Button*			m_LoadAlphaMappingButton;
 
-// for color picking
+	// for color picking
 	Fl_Window*			m_colorDialog;
 	Fl_Color_Chooser*	m_ColorChooser;
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
 	ImpressionistDoc*	getDocument();
-
 	void				show();
 	void				resize_windows(int w, int h);
+	PaintView*			getPaintView();
 
 	// Interface to get attribute
-
 	int					getSize();
 	void				setSize(int size);
+
+	int					getSpace();
+	void				setSpace(int size);
 
 	int					getLineWidth();
 	void				setLineWidth(int size);
@@ -84,6 +87,7 @@ private:
 	double 	m_lfAlpha;
 	int		m_nLineWidth;
 	int		m_nLineAngle;
+	int		m_nSpace;
 	ucolor32	m_cColor;
 
 	// Static class members
@@ -111,7 +115,9 @@ private:
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
+	static void	cb_spaceSlides(Fl_Widget* o, void* v);
 	static void	cb_colorChooses(Fl_Widget* o, void* v);
+	static void	cb_paint_button(Fl_Widget* o, void* v);
 	static void	cb_load_alpha_mapping_button(Fl_Widget* o, void* v);
 
 };

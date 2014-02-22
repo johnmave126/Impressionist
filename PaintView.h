@@ -23,15 +23,11 @@ public:
 	PaintView(int x, int y, int w, int h, const char* l);
 	void draw();
 	int handle(int event);
-
 	void refresh();
-	
 	void resizeWindow(int width, int height);
-
 	void SaveCurrentContent();
-
 	void RestoreContent();
-
+	void paintAutomatic();
 	void markDirectControl(Point);
 	ImpressionistDoc *m_pDoc;
 
@@ -46,6 +42,7 @@ private:
 			m_nWindowWidth, 
 			m_nWindowHeight;
 	Point m_directStartPoint;
+	bool    m_bPaintAuto;
 
 };
 

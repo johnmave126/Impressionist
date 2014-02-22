@@ -25,4 +25,5 @@ we are artists
 - [x] Own designed Ink Brush
 - [ ] filter kernel design interface
 - [x] add a "mural" effect
-- [ ] create painting automatically
+- [x] create painting automatically
+- [ ] Another gradient

@@ -137,7 +137,10 @@ int ImpressionistDoc::getLineAngle()
 	return m_pUI->getLineAngle();
 }
 
-
+int ImpressionistDoc::getSpace()
+{
+	return m_pUI->getSpace();
+}
 
 //---------------------------------------------------------
 // Returns the alpha of the brush.
@@ -230,7 +233,6 @@ int ImpressionistDoc::loadImage(char *iname, bool mural)
 
 	return 1;
 }
-
 
 //----------------------------------------------------------------
 // Save the specified image
