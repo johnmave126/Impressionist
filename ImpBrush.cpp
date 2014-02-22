@@ -53,9 +53,9 @@ void ImpBrush::SetColor (const Point source)
 
 	// Blend the color
 	UNPACK_COLOR(r, g, b, col);
-	color[0] = (unsigned)((r * color[0]) >> 8);
-	color[1] = (unsigned)((g * color[1]) >> 8);
-	color[2] = (unsigned)((b * color[2]) >> 8);
+	color[0] = (unsigned)((r * color[0]) / 255);
+	color[1] = (unsigned)((g * color[1]) / 255);
+	color[2] = (unsigned)((b * color[2]) / 255);
 
 	//Alpha
 	color[3] = (int)(pDoc->getAlpha() * 255);
