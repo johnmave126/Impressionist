@@ -41,6 +41,9 @@ public:
 	void	genMappingTexture();			// generate the texture in GL
 
 	void 	markMove(const Point p);		// mark the moving of cursor
+
+	void	setFilterType(int type);		// called by the UI to set filter type
+	void	filterImage(int dim, int norm);					// called by the UI to begin filter the image
 	
 
 // Attributes
@@ -74,7 +77,9 @@ public:
 	Point m_directEnd;
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;	
+	ImpBrush*			m_pCurrentBrush;
+	// The current active filter
+	int					m_iCurrentFilter;
 	// Size of the brush.
 	int m_nSize;							
 	// The current stroke direct control method

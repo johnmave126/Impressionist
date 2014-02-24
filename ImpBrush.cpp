@@ -43,7 +43,7 @@ char* ImpBrush::BrushName(void)
 void ImpBrush::SetColor (const Point source)
 {
 	ImpressionistDoc* pDoc = GetDocument();
-	int r, g, b, m;
+	int r, g, b;
 	ucolor32 col = pDoc->getBlendColor();
 
 

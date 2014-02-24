@@ -227,6 +227,74 @@ namespace util {
 	int angle2degree(double angle);
 	int calDegree(int x, int y);
 	double calAngle(int x, int y);
+
+	
+#define swap(x, y) \
+	{t = x; x = y; y = t;}
+
+	template<typename T>
+	int partition(T a[], int l, int r, int pivot) {
+		int i = l, j = r - 1, t;
+		T k = a[pivot];
+		swap(a[l], a[pivot]);
+		while(i < j) {
+			while(i < j && a[j] >= k) j--;
+			if(i < j) a[i] = a[j];
+			while(i < j && a[i] < k) i++;
+			if(i < j) a[j] = a[i];
+		}
+		a[i] = k;
+		return i;
+	}
+
+	template<typename T>
+	int select5(T a[], int l, int r) {
+		int i, j, t;
+		for(i = l; i < r; i++) {
+			for(j = r - 1; j > i; j--) {
+				if(a[j] < a[j-1]) {
+					swap(a[j], a[j-1]);
+				}
+			}
+		}
+		return l + ((r - l) >> 1);
+	}
+
+	template<typename T>
+	int medianOfMedian(T a[], int l, int r);
+
+	template<typename T>
+	int quickSelect(T a[], int l, int r, int rank) {
+		int idx;
+		if(r - l == 1) {
+			return l;
+		}
+		idx = medianOfMedian(a, l, r);
+		idx = partition(a, l, r, idx);
+		if(idx - l + 1 < rank) {
+			return quickSelect(a, idx + 1, r, rank - (idx - l + 1));
+		}
+		else if(idx - l + 1 ==rank) {
+			return idx;
+		}
+		else {
+			return quickSelect(a, l, idx, rank);
+		}
+	}
+
+	template<typename T>
+	int medianOfMedian(T a[], int l, int r) {
+		int nMedian = (r - l + 4) / 5;
+		int i, sl, sr, mid, t;
+		for(i = 0; i < nMedian; i++) {
+			sl = l + i * 5;
+			sr = sl + 5;
+			if(sr > r) sr = r;
+			mid = select5(a, sl, sr);
+			swap(a[l+i], a[mid]);
+		}
+		return quickSelect(a, l, l + nMedian, nMedian >> 1);
+	}
 }
 
 #endif

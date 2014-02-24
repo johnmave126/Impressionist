@@ -11,6 +11,7 @@
 #include "impressionistUI.h"
 
 #include "ImpBrush.h"
+#include "ImpKernel.h"
 
 // Include individual brush headers here.
 #include "PointBrush.h"
@@ -22,6 +23,8 @@
 #include "InkBrush.h"
 #include "AlphaMappingBrush.h"
 
+#include "MeanKernel.h"
+#include "MedianKernel.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 
@@ -62,6 +65,9 @@ ImpressionistDoc::ImpressionistDoc()
 		= new InkBrush( this, "Ink Brush" );
 	ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPING]	
 		= new AlphaMappingBrush( this, "Alpha Mapping" );
+
+	ImpKernel::c_nKernelCount = NUM_FILTER_TYPE;
+	m_iCurrentFilter = 0;
 
 	// make one of the brushes current
 	m_pCurrentBrush	= ImpBrush::c_pBrushes[0];
@@ -154,6 +160,47 @@ double ImpressionistDoc::getAlpha()
 ucolor32 ImpressionistDoc::getBlendColor()
 {
 	return m_pUI->getBlendColor();
+}
+
+//---------------------------------------------------------
+// Set the type of filter.
+//---------------------------------------------------------
+void ImpressionistDoc::setFilterType(int type) {
+	m_iCurrentFilter = type;
+}
+
+//---------------------------------------------------------
+// filter the image.
+//---------------------------------------------------------
+void ImpressionistDoc::filterImage(int dim, int norm) {
+	ImpKernel* ker;
+	GLubyte* ucFiltered;
+	if(!m_ucPainting) {
+		fl_alert("Please load image first");
+		return;
+	}
+	switch(m_iCurrentFilter) {
+		case KERNEL_MEAN:
+			ker = new MeanKernel(this, "Mean Filter", dim);
+			break;
+		case KERNEL_GAUSSIAN:
+			ker = new MeanKernel(this, "Gaussian Filter", dim);
+			break;
+		case KERNEL_MEDIAN:
+			ker = new MedianKernel(this, "Median Filter", dim);
+			break;
+		case KERNEL_CUSTOM:
+			ker = new MeanKernel(this, "Custom Filter", dim);
+			break;
+	}
+	ucFiltered = new GLubyte[m_nWidth * m_nHeight * 3];
+	ker->setNorm(norm);
+	ker->applyFilter(ucFiltered, m_ucBitmap, m_nWidth, m_nHeight);
+	delete [] m_ucPainting;
+	m_ucPainting = ucFiltered;
+	delete ker;
+
+	m_pUI->m_paintView->refresh();
 }
 
 //---------------------------------------------------------

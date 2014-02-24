@@ -241,6 +241,15 @@ void ImpressionistUI::cb_swap_canvas(Fl_Menu_* o, void* v)
 }
 
 //------------------------------------------------------------
+// Open up a filter choose dialog to filter the image
+// Called by the UI when the filter image menu item is chosen
+//------------------------------------------------------------
+void ImpressionistUI::cb_filter_image(Fl_Menu_* o, void* v) 
+{
+	whoami(o)->m_filterDialog->show();
+}
+
+//------------------------------------------------------------
 // Causes the Impressionist program to exit
 // Called by the UI when the quit menu item is chosen
 //------------------------------------------------------------
@@ -374,6 +383,56 @@ void ImpressionistUI::cb_colorChooses(Fl_Widget* o, void* v)
 {
 	Fl_Color_Chooser* c = (Fl_Color_Chooser*)o;
 	((ImpressionistUI*)(o->user_data()))->m_cColor=PACK_COLOR((unsigned)floor(c->r() * 255), (unsigned)floor(c->g() * 255), (unsigned)floor(c->b() * 255));
+}
+
+
+//-----------------------------------------------------------
+// Updates the filter chosen to filter image
+// Called by the UI when the filter chooser is used
+//-----------------------------------------------------------
+void ImpressionistUI::cb_filterChoice(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc=pUI->getDocument();
+
+	int type=(int)v;
+	if(type == KERNEL_MEDIAN) {
+		pUI->m_normalizeCheck->deactivate();
+	} else {
+		pUI->m_normalizeCheck->activate();
+	}
+
+	pDoc->setFilterType(type);
+}
+
+//-----------------------------------------------------------
+// Updates the filter dimension
+// Called by the UI when the filter slides is used
+//-----------------------------------------------------------
+void ImpressionistUI::cb_filterDimChoice(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nFilterDim = (int)v;
+}
+
+//-----------------------------------------------------------
+// Updates the choice of whether the filter should normalize
+// Called by the UI when the normalize button is used
+//-----------------------------------------------------------
+void ImpressionistUI::cb_filterNormalizeCheck(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_bNorm = int(((Fl_Check_Button*)o)->value());
+}
+
+//-----------------------------------------------------------
+// Begin to filter the image
+// Called by the UI when the filter button is used
+//-----------------------------------------------------------
+void ImpressionistUI::cb_filter_image_button(Fl_Widget* o, void* v)
+{
+	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc=pUI->getDocument();
+
+	pDoc->filterImage(pUI->m_nFilterDim, pUI->m_bNorm);
 }
 
 //---------------------------------- per instance functions --------------------------------------
@@ -521,6 +580,41 @@ void ImpressionistUI::setBlendColor(ucolor32 col)
 	setBlendColor(r, g, b);
 }
 
+//-------------------------------------------------
+// Get the Filter Dimension
+//-------------------------------------------------
+int ImpressionistUI::getFilterDim()
+{
+	return m_nFilterDim;
+}
+
+//-------------------------------------------------
+// Set the Filter Dimension
+//-------------------------------------------------
+void ImpressionistUI::setFilterDim(int dim)
+{
+	if((dim & 1) && (dim >= 3 && dim <= 9)) {
+		m_nFilterDim = dim;
+	}
+}
+
+//-------------------------------------------------
+// Get the Filter Normalization
+//-------------------------------------------------
+int ImpressionistUI::getFilterNorm()
+{
+	return m_bNorm;
+}
+
+//-------------------------------------------------
+// Set the Filter Normalization
+//-------------------------------------------------
+void ImpressionistUI::setFilterNorm(int norm)
+{
+	m_bNorm = !!norm;
+}
+
+
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
@@ -533,6 +627,11 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 		{ "&Colors...",	FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_colors, 0, FL_MENU_DIVIDER },
 		
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
+		{ 0 },
+
+		
+	{ "&Edit",		0, 0, 0, FL_SUBMENU },
+		{ "&Filter Image",	FL_ALT + 'f', (Fl_Callback *)ImpressionistUI::cb_filter_image },
 		{ 0 },
 
 	{ "&Help",		0, 0, 0, FL_SUBMENU },
@@ -552,6 +651,24 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {"Scattered Circles",	FL_ALT+'d', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES},
   {"Ink",				FL_ALT+'i', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_INK},
   {"Alpha Mapping",		FL_ALT+'a', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA_MAPPING},
+  {0}
+};
+
+// Filter choice menu definition
+Fl_Menu_Item ImpressionistUI::filterTypeMenu[NUM_FILTER_TYPE+1] = {
+  {"Mean",				FL_ALT+'m', (Fl_Callback *)ImpressionistUI::cb_filterChoice, (void *)KERNEL_MEAN},
+  {"Gaussian",			FL_ALT+'g', (Fl_Callback *)ImpressionistUI::cb_filterChoice, (void *)KERNEL_GAUSSIAN},
+  {"Median",			FL_ALT+'d', (Fl_Callback *)ImpressionistUI::cb_filterChoice, (void *)KERNEL_MEDIAN},
+  {"Custom",			FL_ALT+'c', (Fl_Callback *)ImpressionistUI::cb_filterChoice, (void *)KERNEL_CUSTOM},
+  {0}
+};
+
+// Filter choice menu definition
+Fl_Menu_Item ImpressionistUI::filterDimMenu[4+1] = {
+  {"3",				0, (Fl_Callback *)ImpressionistUI::cb_filterDimChoice, (void *)3},
+  {"5",				0, (Fl_Callback *)ImpressionistUI::cb_filterDimChoice, (void *)5},
+  {"7",				0, (Fl_Callback *)ImpressionistUI::cb_filterDimChoice, (void *)7},
+  {"9",				0, (Fl_Callback *)ImpressionistUI::cb_filterDimChoice, (void *)9},
   {0}
 };
 
@@ -600,7 +717,8 @@ ImpressionistUI::ImpressionistUI() {
 	m_nLineAngle = 0;
 	m_nLineWidth = 1;
 	m_cColor = PACK_COLOR(255, 255, 255);
-
+	m_nFilterDim = 3;
+	m_bNorm = 1;
 
 	m_colorDialog = new Fl_Window(230, 270, "Color Selector");
 		// Add the color chooser to the dialog
@@ -696,4 +814,28 @@ ImpressionistUI::ImpressionistUI() {
 
     m_brushDialog->end();	
 
+
+	m_filterDialog = new Fl_Window(400, 360, "Filter Image Dialog");
+		// Add a filter type choice to the dialog
+		m_filterTypeChoice = new Fl_Choice(50,10,150,25,"&Filter");
+		m_filterTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
+		m_filterTypeChoice->menu(filterTypeMenu);
+		m_filterTypeChoice->callback(cb_filterChoice);
+
+		// Add a filter dimension slider to the dialog
+		m_filterDimSlider = new Fl_Choice(320,10,50,25,"&Dimension");
+		m_filterDimSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_filterDimSlider->menu(filterDimMenu);
+		m_filterDimSlider->callback(cb_filterDimChoice);
+
+		m_normalizeCheck = new Fl_Check_Button(10, 315, 50, 25, "&Normalize");
+		m_normalizeCheck->value(m_bNorm);
+		m_normalizeCheck->user_data((void*)(this));	// record self to be used by static callback functions
+		m_normalizeCheck->callback(cb_filterNormalizeCheck);
+
+		m_FilterImageButton = new Fl_Button(220, 315, 150, 25,"&Filter Image");
+		m_FilterImageButton->user_data((void*)(this));
+		m_FilterImageButton->callback(cb_filter_image_button);
+
+	m_filterDialog->end();
 }

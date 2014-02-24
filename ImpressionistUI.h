@@ -14,6 +14,7 @@
 #include <FL/Fl_Value_Slider.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Output.H>
@@ -23,6 +24,7 @@
 #include "PaintView.h"
 
 #include "ImpBrush.h"
+#include "ImpKernel.h"
 
 class ImpressionistUI {
 public:
@@ -51,6 +53,13 @@ public:
 	Fl_Window*			m_colorDialog;
 	Fl_Color_Chooser*	m_ColorChooser;
 
+	// for image filtering
+	Fl_Window*			m_filterDialog;
+	Fl_Choice*			m_filterDimSlider;
+	Fl_Choice*			m_filterTypeChoice;
+	Fl_Check_Button*	m_normalizeCheck;
+	Fl_Button*			m_FilterImageButton;
+
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
 	ImpressionistDoc*	getDocument();
@@ -76,6 +85,12 @@ public:
 	void				setBlendColor(ucolor32 col);
 	void				setBlendColor(unsigned r, unsigned g, unsigned b);
 
+	int					getFilterDim();
+	void				setFilterDim(int dim);
+
+	int					getFilterNorm();
+	void				setFilterNorm(int norm);
+
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document
 
@@ -85,10 +100,14 @@ private:
 	int		m_nLineWidth;
 	int		m_nLineAngle;
 	ucolor32	m_cColor;
+	int		m_nFilterDim;
+	int		m_bNorm;
 
 	// Static class members
 	static Fl_Menu_Item		menuitems[];
 	static Fl_Menu_Item		brushTypeMenu[NUM_BRUSH_TYPE+1];
+	static Fl_Menu_Item		filterTypeMenu[NUM_FILTER_TYPE+1];
+	static Fl_Menu_Item		filterDimMenu[4+1];
 	static Fl_Menu_Item		strokeDirectMenu[NUM_DIRECT+1];
 
 	static ImpressionistUI*	whoami(Fl_Menu_* o);
@@ -101,6 +120,7 @@ private:
 	static void	cb_colors(Fl_Menu_* o, void* v);
 	static void	cb_clear_canvas(Fl_Menu_* o, void* v);
 	static void	cb_swap_canvas(Fl_Menu_* o, void* v);
+	static void cb_filter_image(Fl_Menu_* o, void* v);
 	static void	cb_exit(Fl_Menu_* o, void* v);
 	static void	cb_about(Fl_Menu_* o, void* v);
 	static void	cb_brushChoice(Fl_Widget* o, void* v);
@@ -112,6 +132,10 @@ private:
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
 	static void	cb_colorChooses(Fl_Widget* o, void* v);
 	static void	cb_load_alpha_mapping_button(Fl_Widget* o, void* v);
+	static void	cb_filterChoice(Fl_Widget* o, void* v);
+	static void cb_filterDimChoice(Fl_Widget* o, void* v);
+	static void cb_filterNormalizeCheck(Fl_Widget* o, void* v);
+	static void cb_filter_image_button(Fl_Widget* o, void* v);
 
 };
 
