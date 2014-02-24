@@ -38,9 +38,14 @@ PaintView::PaintView(int			x,
 {
 	m_nWindowWidth	= w;
 	m_nWindowHeight	= h;
+	m_bPaintAuto	= false;
 
 }
 
+void PaintView::paintAutomatic() {
+	m_bPaintAuto = true;
+	refresh();
+}
 
 void PaintView::draw()
 {
@@ -51,16 +56,11 @@ void PaintView::draw()
 
 	if(!valid())
 	{
-
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0);
-
 		// We're only using 2-D, so turn off depth 
 		glDisable( GL_DEPTH_TEST );
-
 		ortho();
-
 		glClear( GL_COLOR_BUFFER_BIT );
-
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -69,7 +69,6 @@ void PaintView::draw()
 	}
 	if(!valid() || m_pDoc->m_bMapFlag) 
 		m_pDoc->genMappingTexture();
-		
 
 	Point scrollpos;// = GetScrollPosition();
 	scrollpos.x = 0;
@@ -90,19 +89,38 @@ void PaintView::draw()
 
 	m_nDrawWidth	= drawWidth;
 	m_nDrawHeight	= drawHeight;
-
 	m_nStartRow		= startrow;
 	m_nEndRow		= startrow + drawHeight;
 	m_nStartCol		= scrollpos.x;
 	m_nEndCol		= m_nStartCol + drawWidth;
 
 	glScissor(0, m_nWindowHeight - m_nDrawHeight, m_nDrawWidth, m_nDrawHeight);
-
+	if(m_bPaintAuto) {
+		int space = m_pDoc->getSpace();
+		int width = m_pDoc->m_nWidth;
+		int height = m_pDoc->m_nHeight;
+		printf("%d %d", width, height);
+		if(m_pDoc->getRandSize()) {
+			m_pDoc->setRand(true);
+		} else {
+			m_pDoc->setRand(false);
+		}
+		
+		m_pDoc->m_pCurrentBrush->BrushBegin(Point(0, 0), Point(0, 0));
+		for(int i=0; i<width; i += space) {
+			for(int j=0; j<height; j += space) {
+				m_pDoc->m_pCurrentBrush->BrushMove(Point(i, j), Point(i, j));
+			}
+		}
+		m_pDoc->m_pCurrentBrush->BrushEnd(Point(width-1, height-1), Point(width-1, height-1));
+		SaveCurrentContent();
+		RestoreContent();
+		m_bPaintAuto = false;
+	}
 
 	if ( m_pDoc->m_ucPainting && !isAnEvent) 
 	{
 		RestoreContent();
-
 	}
 	
 	if ( m_pDoc->m_ucPainting && isAnEvent) 
@@ -122,10 +140,10 @@ void PaintView::draw()
 			break;
 		case LEFT_MOUSE_DRAG:
 			m_pDoc->m_pCurrentBrush->BrushMove( source, target );
+			printf("(%d, %d), (%d, %d) \n", source.x, source.y, target.x, target.y);
 			break;
 		case LEFT_MOUSE_UP:
 			m_pDoc->m_pCurrentBrush->BrushEnd( source, target );
-
 			SaveCurrentContent();
 			RestoreContent();
 			break;

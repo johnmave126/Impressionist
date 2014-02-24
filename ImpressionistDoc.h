@@ -21,12 +21,9 @@ public:
 	ImpressionistDoc();
 
 	void	setUI(ImpressionistUI* ui);		// Assign the UI to use
-
-	int		loadImage(char *iname);			// called by the UI to load image
+	int		loadImage(char *iname, bool mural=false);			// called by the UI to load image
 	int		saveImage(char *iname);			// called by the UI to save image
-
 	int		loadAlphaMapping(char *iname);	// called by the UI to load alpha mapping
-
 	int     clearCanvas();                  // called by the UI to clear the drawing canvas
 	int     swapCanvas();                  // called by the UI to swap the drawing canvas
 	void	setBrushType(int type);			// called by the UI to set the brushType
@@ -34,17 +31,19 @@ public:
 	int		getSize();						// get the UI size
 	int		getLineWidth();
 	int		getLineAngle();
+	int		getSpace();
+	bool	getRandSize();
 	double	getAlpha();						// get the UI alpha
 	ucolor32	getBlendColor();			// get the UI color
 	char*	getImageName();					// get the current image name
 	char*	getAlphaMappingName();			// get the current alpha mapping name
 	void	genMappingTexture();			// generate the texture in GL
-
 	void 	markMove(const Point p);		// mark the moving of cursor
 
 	void	setFilterType(int type);		// called by the UI to set filter type
 	void	filterImage(int dim, int norm);					// called by the UI to begin filter the image
 	
+	void    setRand(bool);
 
 // Attributes
 public:
@@ -64,7 +63,6 @@ public:
 	// Dimensions of alpha mapping texture
 	int				m_nMappingWidth,
 					m_nMappingHeight;
-	
 	GLubyte*		m_ucMapping;
 	unsigned int	m_uMapTextureID;
 	bool			m_bMapFlag;
@@ -77,13 +75,14 @@ public:
 	Point m_directEnd;
 
 	// The current active brush.
-	ImpBrush*			m_pCurrentBrush;
+	ImpBrush*			m_pCurrentBrush;	
 	// The current active filter
 	int					m_iCurrentFilter;
 	// Size of the brush.
 	int m_nSize;							
 	// The current stroke direct control method
 	int m_nCurrentDirect;
+	bool m_bSetRand;
 	ImpressionistUI*	m_pUI;
 
 // Operations

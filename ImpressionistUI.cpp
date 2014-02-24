@@ -183,6 +183,16 @@ void ImpressionistUI::cb_load_image(Fl_Menu_* o, void* v)
 	}
 }
 
+void ImpressionistUI::cb_load_mural(Fl_Menu_* o, void* v) 
+{
+	ImpressionistDoc *pDoc=whoami(o)->getDocument();
+	char* newfile = fl_file_chooser("Open File?", "*.bmp", pDoc->getImageName() );
+	if (newfile != NULL) {
+		pDoc->loadImage(newfile, true);
+	}
+}
+
+
 
 //------------------------------------------------------------------
 // Brings up a file chooser and then saves the painted image
@@ -359,6 +369,23 @@ void ImpressionistUI::cb_alphaSlides(Fl_Widget* o, void* v)
 }
 
 
+void ImpressionistUI::cb_spaceSlides(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_nSpace=int( ((Fl_Slider *)o)->value() ) ;
+}
+
+void ImpressionistUI::cb_paint_button(Fl_Widget* o, void* v)
+{
+	PaintView* paintView=((ImpressionistUI*)(o->user_data()))->getPaintView();
+	paintView->paintAutomatic();
+}
+
+void ImpressionistUI::cb_rand_size_button(Fl_Widget* o, void* v)
+{
+	((ImpressionistUI*)(o->user_data()))->m_bRandSize=bool( ((Fl_Check_Button *)o)->value() ) ;
+}
+
+
 //-----------------------------------------------------------
 // Prompt to load alpha mapping texture
 // Called by the UI when the load alpha mapping is pressed
@@ -445,6 +472,11 @@ ImpressionistDoc* ImpressionistUI::getDocument()
 	return m_pDoc;
 }
 
+PaintView* ImpressionistUI::getPaintView()
+{
+	return m_paintView;
+}
+
 //------------------------------------------------
 // Draw the main window
 //------------------------------------------------
@@ -489,9 +521,24 @@ int ImpressionistUI::getSize()
 void ImpressionistUI::setSize( int size )
 {
 	m_nSize=size;
-
 	if (size<=40 && size > 0) 
 		m_BrushSizeSlider->value(m_nSize);
+}
+
+int ImpressionistUI::getSpace() { return m_nSpace; }
+
+void ImpressionistUI::setSpace( int space )
+{
+	m_nSpace=space;
+	if (space<=16 && space > 0) m_SpaceSlider->value(m_nSpace);
+}
+
+bool ImpressionistUI::getRandSize() { return m_bRandSize; }
+
+void ImpressionistUI::setRandSize( bool randSize )
+{
+	m_bRandSize=randSize;
+	m_RandSizeButton->value(randSize);
 }
 
 //------------------------------------------------
@@ -620,12 +667,11 @@ Fl_Menu_Item ImpressionistUI::menuitems[] = {
 	{ "&File",		0, 0, 0, FL_SUBMENU },
 		{ "&Load Image...",	FL_ALT + 'l', (Fl_Callback *)ImpressionistUI::cb_load_image },
 		{ "&Save Image...",	FL_ALT + 's', (Fl_Callback *)ImpressionistUI::cb_save_image },
+		{ "&Add Mural Image...", FL_ALT + 'L', (Fl_Callback *)ImpressionistUI::cb_load_mural },
 		{ "&Brushes...",	FL_ALT + 'b', (Fl_Callback *)ImpressionistUI::cb_brushes }, 
 		{ "S&wap Canvas",	FL_ALT + 'w', (Fl_Callback *)ImpressionistUI::cb_swap_canvas }, 
 		{ "&Clear Canvas", FL_ALT + 'c', (Fl_Callback *)ImpressionistUI::cb_clear_canvas, 0, FL_MENU_DIVIDER },
-
 		{ "&Colors...",	FL_ALT + 'k', (Fl_Callback *)ImpressionistUI::cb_colors, 0, FL_MENU_DIVIDER },
-		
 		{ "&Quit",			FL_ALT + 'q', (Fl_Callback *)ImpressionistUI::cb_exit },
 		{ 0 },
 
@@ -716,6 +762,8 @@ ImpressionistUI::ImpressionistUI() {
 	m_lfAlpha = 1.0;
 	m_nLineAngle = 0;
 	m_nLineWidth = 1;
+	m_nSpace = 1;
+	m_bRandSize = false;
 	m_cColor = PACK_COLOR(255, 255, 255);
 	m_nFilterDim = 3;
 	m_bNorm = 1;
@@ -805,6 +853,27 @@ ImpressionistUI::ImpressionistUI() {
 		m_BrushSizeSlider->value(m_lfAlpha);
 		m_BrushSizeSlider->align(FL_ALIGN_RIGHT);
 		m_BrushSizeSlider->callback(cb_alphaSlides);
+
+		m_SpaceSlider = new Fl_Value_Slider(10, 280, 150, 25, "Spacing");
+		m_SpaceSlider->user_data((void*)(this));	// record self to be used by static callback functions
+		m_SpaceSlider->type(FL_HOR_NICE_SLIDER);
+        m_SpaceSlider->labelfont(FL_COURIER);
+        m_SpaceSlider->labelsize(12);
+		m_SpaceSlider->minimum(1);
+		m_SpaceSlider->maximum(16);
+		m_SpaceSlider->step(1);
+		m_SpaceSlider->value(m_nSpace);
+		m_SpaceSlider->align(FL_ALIGN_RIGHT);
+		m_SpaceSlider->callback(cb_spaceSlides);
+
+		m_RandSizeButton = new Fl_Check_Button(215, 280, 50, 25, "&Size Random");
+		m_RandSizeButton->value(0);
+		m_RandSizeButton->user_data((void*)(this));
+		m_RandSizeButton->callback(cb_rand_size_button);
+
+		m_PaintButton = new Fl_Button(320, 280, 50, 25,"&Paint");
+		m_PaintButton->user_data((void*)(this));
+		m_PaintButton->callback(cb_paint_button);
 
 		// Add alpha mapping loading button to the dialog
 		m_LoadAlphaMappingButton = new Fl_Button(10, 315, 150, 25,"&Load Alpha Mapping");

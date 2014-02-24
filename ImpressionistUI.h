@@ -16,6 +16,7 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Light_Button.H>
+#include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Output.H>
 
@@ -33,23 +34,24 @@ public:
 	// The FLTK widgets
 	Fl_Window*			m_mainWindow;
 	Fl_Menu_Bar*		m_menubar;
-								
 	PaintView*			m_paintView;
 	OriginalView*		m_origView;
 
-// for brush dialog
+	// for brush dialog
 	Fl_Window*			m_brushDialog;
 	Fl_Choice*			m_BrushTypeChoice;
 	Fl_Choice*			m_StrokeDirectChoice;
-
 	Fl_Slider*			m_BrushSizeSlider;
 	Fl_Slider*			m_LineWidthSlider;
 	Fl_Slider*			m_LineAngleSlider;
 	Fl_Slider*			m_BrushAlphaSlider;
+	Fl_Slider*			m_SpaceSlider;
 	Fl_Button*          m_ClearCanvasButton;
+	Fl_Check_Button*	m_RandSizeButton;
+	Fl_Button*			m_PaintButton;
 	Fl_Button*			m_LoadAlphaMappingButton;
 
-// for color picking
+	// for color picking
 	Fl_Window*			m_colorDialog;
 	Fl_Color_Chooser*	m_ColorChooser;
 
@@ -63,14 +65,19 @@ public:
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
 	ImpressionistDoc*	getDocument();
-
 	void				show();
 	void				resize_windows(int w, int h);
+	PaintView*			getPaintView();
 
 	// Interface to get attribute
-
 	int					getSize();
 	void				setSize(int size);
+
+	int					getSpace();
+	void				setSpace(int size);
+
+	bool				getRandSize();
+	void				setRandSize(bool);
 
 	int					getLineWidth();
 	void				setLineWidth(int size);
@@ -99,6 +106,8 @@ private:
 	double 	m_lfAlpha;
 	int		m_nLineWidth;
 	int		m_nLineAngle;
+	int		m_nSpace;
+	bool	m_bRandSize;
 	ucolor32	m_cColor;
 	int		m_nFilterDim;
 	int		m_bNorm;
@@ -115,6 +124,7 @@ private:
 	// All callbacks here.  Callbacks are declared 
 	// static
 	static void	cb_load_image(Fl_Menu_* o, void* v);
+	static void	cb_load_mural(Fl_Menu_* o, void* v);
 	static void	cb_save_image(Fl_Menu_* o, void* v);
 	static void	cb_brushes(Fl_Menu_* o, void* v);
 	static void	cb_colors(Fl_Menu_* o, void* v);
@@ -130,7 +140,10 @@ private:
 	static void	cb_alphaSlides(Fl_Widget* o, void* v);
 	static void	cb_lineWidthSlides(Fl_Widget* o, void* v);
 	static void	cb_lineAngleSlides(Fl_Widget* o, void* v);
+	static void	cb_spaceSlides(Fl_Widget* o, void* v);
 	static void	cb_colorChooses(Fl_Widget* o, void* v);
+	static void	cb_paint_button(Fl_Widget* o, void* v);
+	static void	cb_rand_size_button(Fl_Widget* o, void* v);
 	static void	cb_load_alpha_mapping_button(Fl_Widget* o, void* v);
 	static void	cb_filterChoice(Fl_Widget* o, void* v);
 	static void cb_filterDimChoice(Fl_Widget* o, void* v);

@@ -27,6 +27,7 @@
 #include "MedianKernel.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
+extern float frand();
 
 ImpressionistDoc::ImpressionistDoc() 
 {
@@ -43,6 +44,7 @@ ImpressionistDoc::ImpressionistDoc()
 
 	m_lastPoint = Point(-1, -1);
 	m_curPoint = Point(-1, -1);
+	m_bSetRand = false;
 
 	// create one instance of each brush
 	ImpBrush::c_nBrushCount	= NUM_BRUSH_TYPE;
@@ -124,7 +126,11 @@ void ImpressionistDoc::setDirectType(int type)
 //---------------------------------------------------------
 int ImpressionistDoc::getSize()
 {
-	return m_pUI->getSize();
+	if(m_bSetRand) {
+		return m_pUI->getSize() * frand();
+	} else {
+		return m_pUI->getSize();
+	}
 }
 
 //---------------------------------------------------------
@@ -143,7 +149,15 @@ int ImpressionistDoc::getLineAngle()
 	return m_pUI->getLineAngle();
 }
 
+int ImpressionistDoc::getSpace()
+{
+	return m_pUI->getSpace();
+}
 
+bool ImpressionistDoc::getRandSize()
+{
+	return m_pUI->getRandSize();
+}
 
 //---------------------------------------------------------
 // Returns the alpha of the brush.
@@ -208,7 +222,7 @@ void ImpressionistDoc::filterImage(int dim, int norm) {
 // This is called by the UI when the load image button is 
 // pressed.
 //---------------------------------------------------------
-int ImpressionistDoc::loadImage(char *iname) 
+int ImpressionistDoc::loadImage(char *iname, bool mural) 
 {
 	// try to open the image to read
 	unsigned char*	data;
@@ -222,6 +236,8 @@ int ImpressionistDoc::loadImage(char *iname)
 	}
 
 	// reflect the fact of loading the new image
+	int oldWidth = m_nWidth;
+	int oldHeight = m_nHeight;
 	m_nWidth		= width;
 	m_nPaintWidth	= width;
 	m_nHeight		= height;
@@ -229,13 +245,25 @@ int ImpressionistDoc::loadImage(char *iname)
 
 	// release old storage
 	if ( m_ucBitmap ) delete [] m_ucBitmap;
-	if ( m_ucPainting ) delete [] m_ucPainting;
-
 	m_ucBitmap		= data;
 
-	// allocate space for draw view
-	m_ucPainting	= new unsigned char [width*height*3];
-	memset(m_ucPainting, 0, width*height*3);
+	if(mural && m_ucPainting) {
+		unsigned char* oldPainting = m_ucPainting;
+		m_ucPainting	= new unsigned char [width*height*3];
+		memset(m_ucPainting, 0, width*height*3);
+		//copy data from old painting to cur painting
+		for(int j=0; j<min(oldHeight, m_nHeight); j++) {
+			for(int i=0; i<min(oldWidth, m_nWidth); i++) {
+				int oldindex = 3 * (j * oldWidth + i);
+				int newindex = 3 * (j * m_nWidth + i);
+				memcpy(m_ucPainting + newindex, oldPainting + oldindex, 3*sizeof(unsigned char));
+			}
+		}
+		delete oldPainting;
+	} else {
+		m_ucPainting	= new unsigned char [width*height*3];
+		memset(m_ucPainting, 0, width*height*3);
+	}
 
 	m_pUI->m_mainWindow->resize(m_pUI->m_mainWindow->x(), 
 								m_pUI->m_mainWindow->y(), 
@@ -263,7 +291,6 @@ int ImpressionistDoc::loadImage(char *iname)
 
 	return 1;
 }
-
 
 //----------------------------------------------------------------
 // Save the specified image
@@ -467,6 +494,11 @@ Point ImpressionistDoc::GetGradient(const Point p) {
 //	result.x /= 9;
 //	result.y /= 9;
 	return result;
+}
+
+void ImpressionistDoc::setRand(bool val) 
+{
+	m_bSetRand = val;
 }
 
 //----------------------------------------------------------------
