@@ -18,6 +18,7 @@
 #include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Check_Button.H>
 #include <FL/Fl_Color_Chooser.H>
+#include <FL/Fl_Float_Input.H>
 #include <FL/Fl_Output.H>
 
 #include "Impressionist.h"
@@ -61,6 +62,7 @@ public:
 	Fl_Choice*			m_filterTypeChoice;
 	Fl_Check_Button*	m_normalizeCheck;
 	Fl_Button*			m_FilterImageButton;
+	Fl_Float_Input*		m_aFilterInput[9][9];
 
 	// Member functions
 	void				setDocument(ImpressionistDoc* doc);
@@ -97,6 +99,8 @@ public:
 
 	int					getFilterNorm();
 	void				setFilterNorm(int norm);
+
+	void				getFilter(double **a);
 
 private:
 	ImpressionistDoc*	m_pDoc;		// pointer to document to communicate with the document

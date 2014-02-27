@@ -137,7 +137,10 @@
   <ItemGroup>
     <ClCompile Include="AlphaMappingBrush.cpp" />
     <ClCompile Include="Bitmap.cpp" />
+    <ClCompile Include="BlurBrush.cpp" />
+    <ClCompile Include="CustomKernel.cpp" />
     <ClCompile Include="DrawHelper.cpp" />
+    <ClCompile Include="GaussianKernel.cpp" />
     <ClCompile Include="ImpBrush.cpp" />
     <ClCompile Include="ImpKernel.cpp" />
     <ClCompile Include="Impressionist.cpp" />
@@ -160,7 +163,10 @@
   <ItemGroup>
     <ClInclude Include="AlphaMappingBrush.h" />
     <ClInclude Include="bitmap.h" />
+    <ClInclude Include="BlurBrush.h" />
+    <ClInclude Include="CustomKernel.h" />
     <ClInclude Include="DrawHelper.h" />
+    <ClInclude Include="GaussianKernel.h" />
     <ClInclude Include="ImpKernel.h" />
     <ClInclude Include="InkBrush.h" />
     <ClInclude Include="MeanKernel.h" />

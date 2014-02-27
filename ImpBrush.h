@@ -21,6 +21,7 @@ enum
 	BRUSH_SCATTERED_CIRCLES,
 	BRUSH_INK,
 	BRUSH_ALPHA_MAPPING,
+	BRUSH_BLUR,
 	NUM_BRUSH_TYPE // Make sure this stays at the end!
 };
 

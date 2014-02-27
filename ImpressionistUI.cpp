@@ -421,12 +421,32 @@ void ImpressionistUI::cb_filterChoice(Fl_Widget* o, void* v)
 {
 	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
 	ImpressionistDoc* pDoc=pUI->getDocument();
+	int i, j;
 
 	int type=(int)v;
 	if(type == KERNEL_MEDIAN) {
 		pUI->m_normalizeCheck->deactivate();
 	} else {
 		pUI->m_normalizeCheck->activate();
+	}
+
+	for(i = 0; i < 9; i++) {
+		for(j = 0; j < 9; j++) {
+			pUI->m_aFilterInput[i][j]->deactivate();
+			if(type == KERNEL_CUSTOM)
+				pUI->m_aFilterInput[i][j]->value("1");
+			else
+				pUI->m_aFilterInput[i][j]->value("N/A");
+		}
+	}
+
+
+	if(type == KERNEL_CUSTOM) {
+		for(i = 0; i < pUI->m_nFilterDim; i++) {
+			for(j = 0; j < pUI->m_nFilterDim; j++) {
+				pUI->m_aFilterInput[i][j]->activate();
+			}
+		}
 	}
 
 	pDoc->setFilterType(type);
@@ -438,7 +458,24 @@ void ImpressionistUI::cb_filterChoice(Fl_Widget* o, void* v)
 //-----------------------------------------------------------
 void ImpressionistUI::cb_filterDimChoice(Fl_Widget* o, void* v)
 {
-	((ImpressionistUI*)(o->user_data()))->m_nFilterDim = (int)v;
+	ImpressionistUI* pUI=((ImpressionistUI *)(o->user_data()));
+	ImpressionistDoc* pDoc=pUI->getDocument();
+	int i, j;
+	pUI->m_nFilterDim = (int)v;
+
+	for(i = 0; i < 9; i++) {
+		for(j = 0; j < 9; j++) {
+			pUI->m_aFilterInput[i][j]->deactivate();
+		}
+	}
+
+	if(pDoc->m_iCurrentFilter == KERNEL_CUSTOM) {
+		for(i = 0; i < pUI->m_nFilterDim; i++) {
+			for(j = 0; j < pUI->m_nFilterDim; j++) {
+				pUI->m_aFilterInput[i][j]->activate();
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------
@@ -661,6 +698,20 @@ void ImpressionistUI::setFilterNorm(int norm)
 	m_bNorm = !!norm;
 }
 
+//-------------------------------------------------
+// Get the Filter
+//-------------------------------------------------
+void ImpressionistUI::getFilter(double **a)
+{
+	int i, j;
+	for(i = 0; i < m_nFilterDim; i++) {
+		for(j = 0; j < m_nFilterDim; j++) {
+			a[i][j] = 0;
+			sscanf(m_aFilterInput[i][j]->value(), "%lf", &a[i][j]);
+		}
+	}
+}
+
 
 // Main menu definition
 Fl_Menu_Item ImpressionistUI::menuitems[] = {
@@ -697,6 +748,7 @@ Fl_Menu_Item ImpressionistUI::brushTypeMenu[NUM_BRUSH_TYPE+1] = {
   {"Scattered Circles",	FL_ALT+'d', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_SCATTERED_CIRCLES},
   {"Ink",				FL_ALT+'i', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_INK},
   {"Alpha Mapping",		FL_ALT+'a', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_ALPHA_MAPPING},
+  {"Blur",				FL_ALT+'b', (Fl_Callback *)ImpressionistUI::cb_brushChoice, (void *)BRUSH_BLUR},
   {0}
 };
 
@@ -732,6 +784,7 @@ Fl_Menu_Item ImpressionistUI::strokeDirectMenu[NUM_DIRECT+1] = {
 // Add new widgets here
 //----------------------------------------------------
 ImpressionistUI::ImpressionistUI() {
+	int i, j;
 	// Create the main window
 	m_mainWindow = new Fl_Window(600, 300, "Impressionist");
 		m_mainWindow->user_data((void*)(this));	// record self to be used by static callback functions
@@ -884,7 +937,7 @@ ImpressionistUI::ImpressionistUI() {
     m_brushDialog->end();	
 
 
-	m_filterDialog = new Fl_Window(400, 360, "Filter Image Dialog");
+	m_filterDialog = new Fl_Window(400, 450, "Filter Image Dialog");
 		// Add a filter type choice to the dialog
 		m_filterTypeChoice = new Fl_Choice(50,10,150,25,"&Filter");
 		m_filterTypeChoice->user_data((void*)(this));	// record self to be used by static callback functions
@@ -897,12 +950,20 @@ ImpressionistUI::ImpressionistUI() {
 		m_filterDimSlider->menu(filterDimMenu);
 		m_filterDimSlider->callback(cb_filterDimChoice);
 
-		m_normalizeCheck = new Fl_Check_Button(10, 315, 50, 25, "&Normalize");
+		for(i = 0; i < 9; i++) {
+			for(j = 0; j < 9; j++) {
+				m_aFilterInput[i][j] = new Fl_Float_Input(10 + j * 40, 360 - i * 40, 35, 35);
+				m_aFilterInput[i][j]->deactivate();
+				m_aFilterInput[i][j]->value("N/A");
+			}
+		}
+
+		m_normalizeCheck = new Fl_Check_Button(10, 405, 50, 25, "&Normalize");
 		m_normalizeCheck->value(m_bNorm);
 		m_normalizeCheck->user_data((void*)(this));	// record self to be used by static callback functions
 		m_normalizeCheck->callback(cb_filterNormalizeCheck);
 
-		m_FilterImageButton = new Fl_Button(220, 315, 150, 25,"&Filter Image");
+		m_FilterImageButton = new Fl_Button(220, 405, 150, 25,"&Filter Image");
 		m_FilterImageButton->user_data((void*)(this));
 		m_FilterImageButton->callback(cb_filter_image_button);
 

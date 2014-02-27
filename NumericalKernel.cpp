@@ -37,7 +37,7 @@ GLubyte NumericalKernel::filterFunc( GLubyte* centerblock) {
 		}
 	}
 	if(m_bNorm) {
-		ans /= sum;
+		ans /= abs(sum);
 	}
 	if(ans > 255 - 1E-6) {
 		ans = 255;
@@ -45,7 +45,7 @@ GLubyte NumericalKernel::filterFunc( GLubyte* centerblock) {
 	if(ans < 1E-6) {
 		ans = 0;
 	}
-	return GLubyte(ans);
+	return (GLubyte)ans;
 }
 
 const double* const * NumericalKernel::getKernel() {

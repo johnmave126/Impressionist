@@ -22,9 +22,12 @@
 #include "SCircleBrush.h"
 #include "InkBrush.h"
 #include "AlphaMappingBrush.h"
+#include "BlurBrush.h"
 
 #include "MeanKernel.h"
 #include "MedianKernel.h"
+#include "GaussianKernel.h"
+#include "CustomKernel.h"
 
 #define DESTROY(p)	{  if ((p)!=NULL) {delete [] p; p=NULL; } }
 extern float frand();
@@ -67,6 +70,8 @@ ImpressionistDoc::ImpressionistDoc()
 		= new InkBrush( this, "Ink Brush" );
 	ImpBrush::c_pBrushes[BRUSH_ALPHA_MAPPING]	
 		= new AlphaMappingBrush( this, "Alpha Mapping" );
+	ImpBrush::c_pBrushes[BRUSH_BLUR]	
+		= new BlurBrush( this, "Blur" );
 
 	ImpKernel::c_nKernelCount = NUM_FILTER_TYPE;
 	m_iCurrentFilter = 0;
@@ -189,6 +194,12 @@ void ImpressionistDoc::setFilterType(int type) {
 void ImpressionistDoc::filterImage(int dim, int norm) {
 	ImpKernel* ker;
 	GLubyte* ucFiltered;
+	double** tmp;
+	int i, j;
+	tmp = new double*[9];
+	for(i = 0; i < 9; i++) {
+		tmp[i] = new double[9];
+	}
 	if(!m_ucPainting) {
 		fl_alert("Please load image first");
 		return;
@@ -198,13 +209,19 @@ void ImpressionistDoc::filterImage(int dim, int norm) {
 			ker = new MeanKernel(this, "Mean Filter", dim);
 			break;
 		case KERNEL_GAUSSIAN:
-			ker = new MeanKernel(this, "Gaussian Filter", dim);
+			ker = new GaussianKernel(this, "Gaussian Filter", dim);
 			break;
 		case KERNEL_MEDIAN:
 			ker = new MedianKernel(this, "Median Filter", dim);
 			break;
 		case KERNEL_CUSTOM:
-			ker = new MeanKernel(this, "Custom Filter", dim);
+			ker = new CustomKernel(this, "Custom Filter", dim);
+			m_pUI->getFilter(tmp);
+			for(i = 0; i < dim; i++) {
+				for(j = 0; j < dim; j++) {
+					((CustomKernel*)ker)->set(i, j, tmp[i][j]);
+				}
+			}
 			break;
 	}
 	ucFiltered = new GLubyte[m_nWidth * m_nHeight * 3];
@@ -213,6 +230,11 @@ void ImpressionistDoc::filterImage(int dim, int norm) {
 	delete [] m_ucPainting;
 	m_ucPainting = ucFiltered;
 	delete ker;
+
+	for(i = 0; i < 9; i++) {
+		delete [] tmp[i];
+	}
+	delete [] tmp;
 
 	m_pUI->m_paintView->refresh();
 }

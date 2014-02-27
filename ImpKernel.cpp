@@ -141,6 +141,7 @@ void ImpKernel::applyFilter(GLubyte* dst, const GLubyte* src, int width, int hei
 		col[i] = filterFunc(mat[i]);
 		delete [] mat[i];
 	}
+	assert(r == m_nDimension && c == m_nDimension);
 	memcpy(dst, col, 3 * sizeof(GLubyte));
 	delete [] mat;
 }
